@@ -244,9 +244,81 @@
 
     .check-row .lbl { font-size: 13.5px; color: var(--color-ink); }
 
+    /* Switch toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: var(--color-surface-3);
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .slider::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 14px;
+      height: 14px;
+      background: var(--color-ink-tertiary);
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    .switch input:checked + .slider {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    .switch input:checked + .slider::before {
+      transform: translateX(16px);
+      background: #fff;
+    }
+
+    .enable-banner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-md);
+    }
+    .enable-banner-body { flex: 1; min-width: 0; }
+    .enable-banner-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-ink);
+      margin-bottom: 4px;
+    }
+    .enable-banner-desc {
+      font-size: 13px;
+      color: var(--color-ink-muted);
+      line-height: 1.5;
+    }
+    .enable-banner .switch { margin-top: 2px; }
+
+    .form-stack.disabled > *:not(.enable-banner) {
+      opacity: 0.55;
+      pointer-events: none;
+      user-select: none;
+    }
+
     /* Section heading */
     .section-header {
-      padding: 24px 32px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 32px 16px;
       border-bottom: 1px solid var(--color-hairline);
     }
 
@@ -815,14 +887,15 @@
         <div class="content-scroll">
           <div class="form-stack">
 
-            <div class="form-group">
-              <label class="form-label" for="bh-name">Name <span class="req">*</span></label>
-              <input type="text" id="bh-name" class="form-control" placeholder="Enter text here">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="bh-desc">Description</label>
-              <textarea id="bh-desc" class="form-control" placeholder="Enter text here"></textarea>
+            <div class="enable-banner">
+              <div class="enable-banner-body">
+                <div class="enable-banner-title">Enable Business Hours</div>
+                <div class="enable-banner-desc">When turned on, tickets received outside of the schedule below are treated as non-business hours and SLA timers pause. Turn off to disable the schedule entirely for this workspace.</div>
+              </div>
+              <label class="switch" title="Enable business hours">
+                <input type="checkbox" id="bh-enable" checked>
+                <span class="slider"></span>
+              </label>
             </div>
 
             <div class="form-group">
@@ -1041,6 +1114,19 @@
         const t = l.getAttribute('data-target');
         if (t) showSection(t);
       }));
+
+      // Enable/disable Business Hours
+      const bhEnable = document.getElementById('bh-enable');
+      const bhFormStack = document.querySelector('#business-hour .form-stack');
+      const bhActionBar = document.querySelector('#business-hour .action-bar');
+
+      function applyBhEnabled() {
+        const on = bhEnable.checked;
+        bhFormStack.classList.toggle('disabled', !on);
+        bhActionBar.classList.toggle('disabled', !on);
+      }
+      bhEnable.addEventListener('change', applyBhEnabled);
+      applyBhEnabled();
 
       // Operational hours: show/hide business card
       const opRadios = document.querySelectorAll('input[name="op-hours"]');
