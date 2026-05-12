@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings – Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+
+    /* =========================================================
+       CSS VARIABLES & RESET
+    ========================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --color-bg:          #f0f1f3;
+      --color-surface:     #ffffff;
+      --color-sidebar:     #ffffff;
+      --color-icon-rail:   #f0f1f3;
+      --color-accent:      #2563eb;
+      --color-accent-soft: #eff6ff;
+      --color-text:        #111827;
+      --color-muted:       #6b7280;
+      --color-border:      #e5e7eb;
+      --color-hover:       #f3f4f6;
+      --color-active-bg:   #e8edf5;
+      --color-active-txt:  #111827;
+      --color-badge:       #ef4444;
+
+      --rail-width:        56px;
+      --nav-width:         240px;
+      --font-body:         'DM Sans', sans-serif;
+      --font-display:      'DM Sans', sans-serif;
+      --radius-sm:         6px;
+      --radius-md:         10px;
+      --shadow-panel:      2px 0 8px rgba(0,0,0,0.06);
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+
+    /* =========================================================
+       ICON RAIL  (leftmost narrow strip)
+    ========================================================= */
+    .icon-rail {
+      width: var(--rail-width);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px 0 12px;
+      gap: 0;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    /* Brand logo at the top of the rail */
+    .icon-rail .brand {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      font-family: var(--font-display),serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+      flex-shrink: 0;
+    }
+
+    /* Individual icon button in the rail */
+    .rail-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 9px 0 5px;
+      gap: 3px;
+      cursor: pointer;
+      color: #9ca3af;
+      font-size: 9.5px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      transition: color 0.15s;
+      position: relative;
+      text-decoration: none;
+    }
+
+    .rail-item svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .rail-item:hover { color: #374151; }
+    .rail-item.active { color: #374151; }
+
+    /* Notification badge on an icon */
+    .rail-item .badge {
+      position: absolute;
+      top: 7px;
+      right: 9px;
+      width: 8px;
+      height: 8px;
+      background: var(--color-badge);
+      border-radius: 50%;
+      border: 1.5px solid var(--color-icon-rail);
+    }
+
+    /* Bottom group of rail icons (search, settings, help) */
+    .rail-bottom {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 0;
+    }
+
+    /* Settings button – highlighted blue square in the rail */
+    .rail-item.settings-active {
+      background: var(--color-accent);
+      color: #fff;
+      border-radius: 0;
+      width: 100%;
+    }
+
+    .rail-item.settings-active:hover { color: #fff; }
+
+
+    /* =========================================================
+       SIDEBAR / NAVIGATION PANEL  (second panel)
+    ========================================================= */
+    .sidebar {
+      width: var(--nav-width);
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0 16px;
+      flex-shrink: 0;
+      overflow-y: auto;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* Page title inside the sidebar */
+    .sidebar-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text);
+      padding: 0 16px 16px;
+      margin-bottom: 8px;
+    }
+
+    /* Section group – collapsible workspace header */
+    .sidebar-group {
+      padding: 0 8px;
+      margin-bottom: 4px;
+    }
+
+    /* Workspace dropdown trigger */
+    .sidebar-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text);
+      user-select: none;
+      transition: background 0.12s;
+    }
+
+    .sidebar-group-header:hover { background: var(--color-hover); }
+
+    .sidebar-group-header svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.2s;
+    }
+
+    /* Navigation links inside the sidebar */
+    .sidebar-nav {
+      list-style: none;
+      padding: 4px 8px 0;
+    }
+
+    .sidebar-nav li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 400;
+      color: var(--color-muted);
+      text-decoration: none;
+      transition: background 0.12s, color 0.12s;
+      cursor: pointer;
+    }
+
+    .sidebar-nav li a svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .sidebar-nav li a:hover {
+      background: var(--color-hover);
+      color: var(--color-text);
+    }
+
+    /* Active nav link */
+    .sidebar-nav li a.active {
+      background: var(--color-active-bg);
+      color: var(--color-active-txt);
+      font-weight: 500;
+    }
+
+
+    /* =========================================================
+       CONTENT AREA  (main white panel)
+    ========================================================= */
+    .content-area {
+      width: 100%;
+      background: var(--color-surface);
+      overflow-y: auto;
+    }
+
+    /* Main scrollable content body */
+    .content-body {
+
+      padding: 36px 40px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================
+       ICON RAIL — Leftmost narrow navigation strip
+  ========================================================= -->
+  <aside class="icon-rail" role="complementary" aria-label="App navigation">
+
+    <!-- Brand / Logo -->
+    <div class="brand" title="Dashboard">D</div>
+
+    <!-- Primary navigation icons -->
+    <a class="rail-item" href="#" title="Inbox">
+      <div class="badge" aria-label="8 unread notifications"></div>
+      <!-- Inbox icon -->
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M22 12h-6l-2 3H10l-2-3H2"/>
+        <path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/>
+      </svg>
+      Inbox
+    </a>
+
+    <a class="rail-item active" href="#" title="Chat">
+      <!-- Chat icon -->
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+      Chat
+    </a>
+
+    <a class="rail-item" href="#" title="Workflow">
+      <!-- Workflow icon -->
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <path d="M17.5 14v6M14 17h7"/>
+      </svg>
+      Workflow
+    </a>
+
+    <a class="rail-item" href="#" title="Neo AI">
+      <!-- Neo / AI icon -->
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+      </svg>
+      Neo
+    </a>
+
+    <a class="rail-item" href="#" title="Docs">
+      <!-- Docs icon -->
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10 9 9 9 8 9"/>
+      </svg>
+      Docs
+    </a>
+
+    <a class="rail-item" href="#" title="More">
+      <!-- More / ellipsis icon -->
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="5" cy="12" r="1" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+        <circle cx="19" cy="12" r="1" fill="currentColor" stroke="none"/>
+      </svg>
+      More
+    </a>
+
+    <!-- Bottom utility icons -->
+    <div class="rail-bottom">
+      <a class="rail-item" href="#" title="Search">
+        <!-- Search icon -->
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </a>
+
+      <a class="rail-item settings-active" href="#" title="Settings" aria-current="page">
+        <!-- Settings / gear icon -->
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+        </svg>
+      </a>
+
+      <a class="rail-item" href="#" title="Help">
+        <!-- Help icon -->
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </a>
+    </div>
+
+  </aside>
+  <!-- END ICON RAIL -->
+  <div style="display: flex; height: 100vh; width: 100%; margin: 10px; box-shadow: 0 0 0 1px #0000000d,0 4px 24px 2px #0000001a; border-radius: 10px; overflow: hidden;">
+      <!-- =========================================================
+       SIDEBAR — Secondary navigation panel with menu items
+      ========================================================= -->
+      <nav class="sidebar" role="navigation" aria-label="Settings navigation">
+
+        <!-- Sidebar heading -->
+        <div class="sidebar-title">Settings</div>
+
+        <!-- Workspace section group with dropdown chevron -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-header" role="button" aria-expanded="true" tabindex="0">
+            Workspace
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Navigation links list -->
+        <ul class="sidebar-nav" role="list">
+
+          <li>
+            <a href="#" class="active" aria-current="page">
+              <!-- General / lines icon -->
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <line x1="8" y1="6" x2="21" y2="6"/>
+                <line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                <line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+              General
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <!-- Billing / card icon -->
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                <line x1="1" y1="10" x2="23" y2="10"/>
+              </svg>
+              Billing
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <!-- Teammates / users icon -->
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                <path d="M16 3.13a4 4 0 010 7.75"/>
+              </svg>
+              Teammates
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <!-- Roles & Permissions icon -->
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 8v4l3 3"/>
+              </svg>
+              Roles &amp; Permission
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <!-- Block Rules / shield icon -->
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+              </svg>
+              Block Rules
+            </a>
+          </li>
+
+        </ul>
+
+      </nav>
+      <!-- END SIDEBAR -->
+
+
+      <!-- =========================================================
+           CONTENT AREA — Main white panel where page content loads
+      ========================================================= -->
+      <main class="content-area" role="main" aria-label="Settings content">
+        <!-- Scrollable body of the content area -->
+        <div class="content-body">
+
+        </div>
+        <!-- END CONTENT BODY -->
+
+      </main>
+      <!-- END CONTENT AREA -->
+
+  </div>
+</body>
+</html>
