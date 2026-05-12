@@ -493,6 +493,29 @@
       color: var(--color-ink);
     }
 
+    .day-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 6px 0;
+    }
+
+    .day-row .check-row { gap: 10px; }
+
+    .day-row.disabled .time-select {
+      opacity: 0.55;
+      pointer-events: none;
+      color: var(--color-ink-tertiary);
+      border-color: var(--color-hairline);
+      background: var(--color-surface-1);
+    }
+
+    .day-row.disabled .time-sep,
+    .day-row.disabled .to-sep { color: var(--color-ink-tertiary); }
+
+    .day-row.disabled .duration-label { visibility: hidden; }
+
     .standard-toggle {
       display: flex;
       gap: 32px;
@@ -670,7 +693,7 @@
 
   <!-- ICON RAIL -->
   <aside class="icon-rail" role="complementary" aria-label="App navigation">
-    <div class="brand" title="App">L</div>
+    <div class="brand" title="App">D</div>
 
     <a class="rail-item" href="#" title="Inbox">
       <div class="badge" aria-label="Unread notifications"></div>
@@ -774,13 +797,6 @@
         <li>
           <a href="#" data-target="holiday-list">
             Holiday List
-            <svg class="nav-end" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="6" cy="6" r="2"/>
-              <circle cx="18" cy="6" r="2"/>
-              <circle cx="12" cy="18" r="2"/>
-              <path d="M6 8v3a2 2 0 002 2h8a2 2 0 002-2V8"/>
-              <path d="M12 13v3"/>
-            </svg>
           </a>
         </li>
       </ul>
@@ -827,10 +843,6 @@
                   <span class="radio-label">Calendar Hours (24 hrs x 7 days)</span>
                 </label>
                 <label class="radio-row">
-                  <input type="radio" name="op-hours" value="closed">
-                  <span class="radio-label">Closed Hours (Offline 24 hrs x 7 days)</span>
-                </label>
-                <label class="radio-row">
                   <input type="radio" name="op-hours" value="business" checked>
                   <span class="radio-label">
                     Business Hours (Choose work days / hours)
@@ -855,6 +867,7 @@
                   </label>
                 </div>
 
+                <div id="standard-layout">
                 <div class="business-card-row">
                   <div class="row-label">Select Days</div>
                   <div class="day-checkboxes" id="day-checkboxes">
@@ -892,10 +905,12 @@
                     <select class="form-control time-select ampm" id="end-ap">
                       <option selected>PM</option><option>AM</option>
                     </select>
-                    <button class="plus-btn" type="button" title="Add interval" aria-label="Add interval">+</button>
                     <span class="duration-label" id="duration-label">9 h</span>
                   </div>
                 </div>
+                </div>
+
+                <div id="customize-layout" hidden></div>
               </div>
             </div>
 
@@ -1049,18 +1064,97 @@
         return h === 12 ? 12 : h + 12;
       }
 
-      function recalcDuration() {
-        const s = to24(startH.value, startAp.value) * 60 + parseInt(startM.value, 10);
-        const e = to24(endH.value, endAp.value) * 60 + parseInt(endM.value, 10);
+      function computeDuration(sH, sM, sAp, eH, eM, eAp) {
+        const s = to24(sH, sAp) * 60 + parseInt(sM, 10);
+        const e = to24(eH, eAp) * 60 + parseInt(eM, 10);
         let diff = e - s;
         if (diff < 0) diff += 24 * 60;
         const hrs = Math.floor(diff / 60);
         const mins = diff % 60;
-        durLabel.textContent = mins ? `${hrs} h ${mins} m` : `${hrs} h`;
+        return mins ? `${hrs} h ${mins} m` : `${hrs} h`;
+      }
+
+      function recalcDuration() {
+        durLabel.textContent = computeDuration(startH.value, startM.value, startAp.value, endH.value, endM.value, endAp.value);
       }
 
       [startH, startM, startAp, endH, endM, endAp].forEach(el => el.addEventListener('change', recalcDuration));
       recalcDuration();
+
+      // ===== Customize mode: per-day rows =====
+      const HOURS = ['09','10','11','12','01','02','03','04','05','06','07','08'];
+      const MINUTES = ['00','15','30','45'];
+      const DAYS = [
+        { name: 'Monday',    checked: true  },
+        { name: 'Tuesday',   checked: true  },
+        { name: 'Wednesday', checked: true  },
+        { name: 'Thursday',  checked: true  },
+        { name: 'Friday',    checked: true  },
+        { name: 'Saturday',  checked: false },
+        { name: 'Sunday',    checked: false }
+      ];
+
+      const customizeLayout = document.getElementById('customize-layout');
+      const standardLayout = document.getElementById('standard-layout');
+
+      function buildOptions(values, selected) {
+        return values.map(v => `<option${v === selected ? ' selected' : ''}>${v}</option>`).join('');
+      }
+
+      DAYS.forEach(d => {
+        const row = document.createElement('div');
+        row.className = 'day-row' + (d.checked ? '' : ' disabled');
+        row.dataset.day = d.name;
+        row.innerHTML = `
+          <label class="check-row">
+            <input type="checkbox" class="day-toggle"${d.checked ? ' checked' : ''}>
+            <span class="lbl">${d.name}</span>
+          </label>
+          <div class="time-row">
+            <select class="form-control time-select start-h" aria-label="${d.name} start hour">${buildOptions(HOURS, '09')}</select>
+            <span class="time-sep">:</span>
+            <select class="form-control time-select start-m" aria-label="${d.name} start minute">${buildOptions(MINUTES, '00')}</select>
+            <select class="form-control time-select ampm start-ap" aria-label="${d.name} start AM/PM">${buildOptions(['AM','PM'], 'AM')}</select>
+            <span class="to-sep">To</span>
+            <select class="form-control time-select end-h" aria-label="${d.name} end hour">${buildOptions(HOURS, '06')}</select>
+            <span class="time-sep">:</span>
+            <select class="form-control time-select end-m" aria-label="${d.name} end minute">${buildOptions(MINUTES, '00')}</select>
+            <select class="form-control time-select ampm end-ap" aria-label="${d.name} end AM/PM">${buildOptions(['AM','PM'], 'PM')}</select>
+            <span class="duration-label">9 h</span>
+          </div>
+        `;
+        customizeLayout.appendChild(row);
+      });
+
+      function recalcRow(row) {
+        const sH  = row.querySelector('.start-h').value;
+        const sM  = row.querySelector('.start-m').value;
+        const sAp = row.querySelector('.start-ap').value;
+        const eH  = row.querySelector('.end-h').value;
+        const eM  = row.querySelector('.end-m').value;
+        const eAp = row.querySelector('.end-ap').value;
+        row.querySelector('.duration-label').textContent = computeDuration(sH, sM, sAp, eH, eM, eAp);
+      }
+
+      customizeLayout.querySelectorAll('.day-row').forEach(row => {
+        row.querySelectorAll('.time-select').forEach(sel =>
+          sel.addEventListener('change', () => recalcRow(row))
+        );
+        const toggle = row.querySelector('.day-toggle');
+        toggle.addEventListener('change', () => {
+          row.classList.toggle('disabled', !toggle.checked);
+        });
+      });
+
+      // Schedule type toggle (Standard <-> Customize)
+      document.querySelectorAll('input[name="schedule-type"]').forEach(r => {
+        r.addEventListener('change', () => {
+          if (!r.checked) return;
+          const isCustom = r.value === 'customize';
+          standardLayout.hidden = isCustom;
+          customizeLayout.hidden = !isCustom;
+        });
+      });
 
       // Holiday list: add row
       const addBtn = document.getElementById('hl-add-btn');
