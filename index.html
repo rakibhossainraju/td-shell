@@ -70,14 +70,14 @@
     .content-section { display: none; }
     .content-section.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 
-    .form-group { margin-bottom: 20px; }
+    .form-group { margin-bottom: 28px; }
 
     .form-label {
       display: block;
       font-size: 13px;
       font-weight: 600;
       color: var(--color-ink);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .form-label .req { color: var(--color-required); margin-left: 2px; }
@@ -167,7 +167,7 @@
     .btn-icon-square:hover { background: var(--color-primary-soft); }
 
     /* Radio (custom violet) */
-    .radio-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; cursor: pointer; }
+    .radio-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer; }
     .radio-row:last-child { margin-bottom: 0; }
 
     .radio-row input[type="radio"] {
@@ -286,8 +286,8 @@
       display: flex;
       align-items: center;
       gap: 16px;
-      padding: 14px 16px;
-      margin-bottom: 24px;
+      padding: 16px 18px;
+      margin-bottom: 32px;
       background: var(--color-surface-2);
       border: 1px solid var(--color-hairline);
       border-radius: var(--radius-md);
@@ -547,13 +547,38 @@
 
     /* Action bar — inline at end of form */
     .action-bar {
-      margin-top: 32px;
+      margin-top: 40px;
       padding-top: 24px;
       border-top: 1px solid var(--color-hairline);
       display: flex;
       align-items: center;
       justify-content: end;
-      gap: 8px;
+      gap: 10px;
+    }
+
+    /* =========================================================
+       INBOX SELECTOR
+    ========================================================= */
+    .inbox-select-wrap { max-width: 360px; }
+
+    .inbox-checkbox-grid {
+      display: none;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px 32px;
+      margin-top: 16px;
+      padding: 18px 20px;
+      background: var(--color-primary-softer);
+      border: 1px solid var(--color-primary-border);
+      border-radius: var(--radius-md);
+    }
+    .inbox-checkbox-grid.show { display: grid; }
+    .inbox-checkbox-grid .check-row { padding: 4px 0; }
+
+    @media (max-width: 720px) {
+      .inbox-checkbox-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 480px) {
+      .inbox-checkbox-grid { grid-template-columns: 1fr; }
     }
 
     /* =========================================================
@@ -566,12 +591,12 @@
     }
 
     .business-card {
-      margin-top: 16px;
+      margin-top: 20px;
       margin-left: 28px;
       background: var(--color-surface-1);
       border: 1px solid var(--color-hairline);
       border-radius: var(--radius-lg);
-      padding: 18px 20px;
+      padding: 22px 24px;
       display: none;
     }
     .business-card.show { display: block; }
@@ -579,9 +604,9 @@
     .business-card-row {
       display: grid;
       grid-template-columns: 110px 1fr;
-      gap: 16px;
+      gap: 20px;
       align-items: center;
-      padding: 8px 0;
+      padding: 12px 0;
     }
 
     .business-card-row + .business-card-row {
@@ -620,14 +645,14 @@
     .standard-toggle {
       display: flex;
       gap: 32px;
-      padding-bottom: 14px;
+      padding-bottom: 16px;
       border-bottom: 1px solid var(--color-hairline);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .day-checkboxes {
       display: flex;
-      gap: 18px;
+      gap: 22px;
       flex-wrap: wrap;
     }
 
@@ -933,6 +958,25 @@
             </div>
 
             <div class="form-group">
+              <label class="form-label" for="bh-inboxes">Inboxes <span class="req">*</span></label>
+              <div class="inbox-select-wrap">
+                <select id="bh-inboxes" class="form-control">
+                  <option value="all" selected>All inboxes</option>
+                  <option value="select">Select inboxes</option>
+                </select>
+              </div>
+              <div id="bh-inbox-grid" class="inbox-checkbox-grid">
+                <label class="check-row"><input type="checkbox" data-inbox="J&G Shoes"><span class="lbl">J&amp;G Shoes</span></label>
+                <label class="check-row"><input type="checkbox" data-inbox="J&G Support" checked><span class="lbl">J&amp;G Support</span></label>
+                <label class="check-row"><input type="checkbox" data-inbox="J&G Wholesale"><span class="lbl">J&amp;G Wholesale</span></label>
+                <label class="check-row"><input type="checkbox" data-inbox="J&G Wholesale Support"><span class="lbl">J&amp;G Wholesale Support</span></label>
+                <label class="check-row"><input type="checkbox" data-inbox="Returns" checked><span class="lbl">Returns</span></label>
+                <label class="check-row"><input type="checkbox" data-inbox="Sales (Internal)" checked><span class="lbl">Sales (Internal)</span></label>
+                <label class="check-row"><input type="checkbox" data-inbox="Wholesale"><span class="lbl">Wholesale</span></label>
+              </div>
+            </div>
+
+            <div class="form-group">
               <label class="form-label" for="bh-timezone">Time Zone <span class="req">*</span></label>
               <select id="bh-timezone" class="form-control">
                 <option value="" selected disabled>Select</option>
@@ -1021,7 +1065,7 @@
               </div>
             </div>
 
-            <div class="form-group" style="margin-top: 24px;">
+            <div class="form-group">
               <label class="form-label" for="holiday-select">Associate Holiday List</label>
               <p class="holiday-meta">Associated holiday list will be treated as non-business hours and SLA for tickets will not be calculated.</p>
               <select id="holiday-select" class="form-control">
@@ -1159,6 +1203,15 @@
       }
       bhEnable.addEventListener('change', applyBhEnabled);
       applyBhEnabled();
+
+      // Inbox selector: toggle checkbox grid
+      const inboxSelect = document.getElementById('bh-inboxes');
+      const inboxGrid = document.getElementById('bh-inbox-grid');
+      function applyInboxMode() {
+        inboxGrid.classList.toggle('show', inboxSelect.value === 'select');
+      }
+      inboxSelect.addEventListener('change', applyInboxMode);
+      applyInboxMode();
 
       // Operational hours: show/hide business card
       const opRadios = document.querySelectorAll('input[name="op-hours"]');
