@@ -1080,28 +1080,10 @@
                   <div class="business-card-row">
                     <div class="row-label">Select Time</div>
                     <div class="time-row">
-                      <select class="form-control time-select" id="start-h" aria-label="Start hour">
-                        <option>09</option><option>08</option><option>10</option>
-                      </select>
-                      <span class="time-sep">:</span>
-                      <select class="form-control time-select" id="start-m" aria-label="Start minute">
-                        <option>00</option><option>15</option><option>30</option><option>45</option>
-                      </select>
-                      <select class="form-control time-select ampm" id="start-ap" aria-label="Start AM/PM">
-                        <option>AM</option><option>PM</option>
-                      </select>
-                      <span class="to-sep">to</span>
-                      <select class="form-control time-select" id="end-h" aria-label="End hour">
-                        <option>06</option><option>05</option><option>07</option>
-                      </select>
-                      <span class="time-sep">:</span>
-                      <select class="form-control time-select" id="end-m" aria-label="End minute">
-                        <option>00</option><option>15</option><option>30</option><option>45</option>
-                      </select>
-                      <select class="form-control time-select ampm" id="end-ap" aria-label="End AM/PM">
-                        <option selected>PM</option><option>AM</option>
-                      </select>
-                      <span class="duration-label" id="duration-label">9 h</span>
+                      <select class="form-control time-select full-time" id="start-time" aria-label="Start time"></select>
+                      <span class="to-sep">-</span>
+                      <select class="form-control time-select full-time" id="end-time" aria-label="End time"></select>
+                      <span class="duration-label" id="duration-label">8 h</span>
                     </div>
                   </div>
                   </div>
@@ -1111,7 +1093,7 @@
               </div>
               <div class="tz-section">
                 <h3 class="tz-heading">Timezone</h3>
-                <p class="tz-subtext">Office-hours times are shown in your workspace timezone.</p>
+                <p class="tz-subtext">Business-hours times are shown in your workspace timezone.</p>
                 <div class="tz-card">
                   <div>
                     <p class="tz-card-title">Workspace timezone</p>
@@ -1256,39 +1238,7 @@
         businessCard.classList.toggle('show', r.value === 'business' && r.checked);
       }));
 
-      // Duration calculator
-      const startH = document.getElementById('start-h');
-      const startM = document.getElementById('start-m');
-      const startAp = document.getElementById('start-ap');
-      const endH = document.getElementById('end-h');
-      const endM = document.getElementById('end-m');
-      const endAp = document.getElementById('end-ap');
-      const durLabel = document.getElementById('duration-label');
-
-      function to24(h, ap) {
-        h = parseInt(h, 10);
-        if (ap === 'AM') return h === 12 ? 0 : h;
-        return h === 12 ? 12 : h + 12;
-      }
-
-      function computeDuration(sH, sM, sAp, eH, eM, eAp) {
-        const s = to24(sH, sAp) * 60 + parseInt(sM, 10);
-        const e = to24(eH, eAp) * 60 + parseInt(eM, 10);
-        let diff = e - s;
-        if (diff < 0) diff += 24 * 60;
-        const hrs = Math.floor(diff / 60);
-        const mins = diff % 60;
-        return mins ? `${hrs} h ${mins} m` : `${hrs} h`;
-      }
-
-      function recalcDuration() {
-        durLabel.textContent = computeDuration(startH.value, startM.value, startAp.value, endH.value, endM.value, endAp.value);
-      }
-
-      [startH, startM, startAp, endH, endM, endAp].forEach(el => el.addEventListener('change', recalcDuration));
-      recalcDuration();
-
-      // ===== Customize mode: per-day rows =====
+      // Time options shared by standard + customize
       const TIME_OPTIONS = (() => {
         const out = [];
         for (let h = 0; h < 24; h++) {
@@ -1319,6 +1269,27 @@
         const mins = diff % 60;
         return mins ? `${hrs} h ${mins} m` : `${hrs} h`;
       }
+
+      // Standard duration calculator
+      const startTime = document.getElementById('start-time');
+      const endTime = document.getElementById('end-time');
+      const durLabel = document.getElementById('duration-label');
+
+      function populateTimeSelect(sel, selected) {
+        sel.innerHTML = TIME_OPTIONS
+          .map(v => `<option${v === selected ? ' selected' : ''}>${v}</option>`)
+          .join('');
+      }
+      populateTimeSelect(startTime, '9:00am');
+      populateTimeSelect(endTime, '5:00pm');
+
+      function recalcDuration() {
+        durLabel.textContent = computeDurationStr(startTime.value, endTime.value);
+      }
+      [startTime, endTime].forEach(el => el.addEventListener('change', recalcDuration));
+      recalcDuration();
+
+      // ===== Customize mode: per-day rows =====
 
       const DAYS = [
         { name: 'Monday',    checked: true  },
