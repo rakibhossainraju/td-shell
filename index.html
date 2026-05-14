@@ -1311,10 +1311,13 @@
         row.className = 'day-row' + (d.checked ? '' : ' disabled');
         row.dataset.day = d.name;
         row.innerHTML = `
-          <label class="check-row">
-            <input type="checkbox" class="day-toggle"${d.checked ? ' checked' : ''}>
+          <div class="check-row">
+            <label class="switch" title="Enable ${d.name}">
+              <input type="checkbox" class="day-toggle"${d.checked ? ' checked' : ''}>
+              <span class="slider"></span>
+            </label>
             <span class="lbl">${d.name}</span>
-          </label>
+          </div>
           <div class="time-row">
             <select class="form-control time-select start-h" aria-label="${d.name} start hour">${buildOptions(HOURS, '09')}</select>
             <span class="time-sep">:</span>
