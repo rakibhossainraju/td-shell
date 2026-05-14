@@ -700,8 +700,11 @@
 
     .day-toggles {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 14px 20px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px 16px;
+    }
+    @media (max-width: 560px) {
+      .day-toggles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     .day-toggle-item {
@@ -1107,6 +1110,128 @@
 
     .bh-acc-body .inbox-checkbox-grid { background: var(--color-surface-1); }
 
+    /* Group list rows */
+    .bh-group-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bh-group-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 18px;
+      background: var(--color-surface-1);
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-lg);
+      transition: border-color 0.18s, box-shadow 0.18s;
+      animation: hlItemIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .bh-group-item:hover {
+      border-color: var(--color-hairline-strong);
+      box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.06);
+    }
+    .bh-group-item:hover .bh-group-actions { opacity: 1; }
+    .bh-group-item.removing {
+      animation: hlItemOut 0.2s ease-out forwards;
+    }
+
+    .bh-group-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-primary-softer);
+      border: 1px solid var(--color-primary-border);
+      border-radius: var(--radius-md);
+      color: var(--color-primary);
+    }
+    .bh-group-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .bh-group-body { min-width: 0; flex: 1; }
+    .bh-group-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink);
+      letter-spacing: -0.1px;
+      margin: 0 0 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .bh-group-desc {
+      font-size: 13px;
+      color: var(--color-ink-muted);
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+    }
+    .bh-group-desc.is-empty { color: var(--color-ink-tertiary); font-style: italic; }
+
+    .bh-group-actions {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.18s;
+    }
+    @media (hover: none) { .bh-group-actions { opacity: 1; } }
+
+    .bh-group-actions button {
+      appearance: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      color: var(--color-ink-subtle);
+      transition: background 0.15s, color 0.15s;
+    }
+    .bh-group-actions button svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .bh-group-actions button:hover { background: var(--color-surface-2); color: var(--color-ink); }
+    .bh-group-actions button.bh-group-delete:hover { color: #dc2626; background: #fee2e2; }
+
+    .bh-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 56px 24px;
+      margin-bottom: 28px;
+      background: var(--color-surface-1);
+      border: 1px dashed var(--color-hairline-strong);
+      border-radius: var(--radius-lg);
+      color: var(--color-ink-subtle);
+      text-align: center;
+    }
+    .bh-empty[hidden] { display: none; }
+    .bh-empty svg { width: 32px; height: 32px; color: var(--color-ink-tertiary); margin-bottom: 12px; }
+    .bh-empty-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink);
+      margin: 0 0 4px;
+    }
+    .bh-empty-sub {
+      font-size: 13px;
+      color: var(--color-ink-muted);
+      margin: 0;
+    }
+
     /* Holiday list */
     .holiday-list {
       list-style: none;
@@ -1360,6 +1485,23 @@
                   0 8px 16px -8px rgba(15, 23, 42, 0.1);
       overflow: hidden;
       animation: modalIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      max-height: min(640px, calc(100vh - 60px));
+    }
+    .modal-wide { max-width: 680px; }
+    .modal-body-scroll { overflow-y: auto; flex: 1; }
+    .modal-body-scroll .business-card { margin-left: 0; }
+
+    .form-control.shake {
+      animation: inputShake 0.36s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+      border-color: var(--color-required);
+    }
+    @keyframes inputShake {
+      10%, 90% { transform: translateX(-1px); }
+      20%, 80% { transform: translateX(2px); }
+      30%, 50%, 70% { transform: translateX(-4px); }
+      40%, 60% { transform: translateX(4px); }
     }
 
     .modal-header {
@@ -1589,7 +1731,16 @@
                 </button>
               </div>
 
-              <div class="bh-accordions" id="bh-accordions"></div>
+              <ul class="bh-group-list" id="bh-list"></ul>
+
+              <div class="bh-empty" id="bh-empty" hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <p class="bh-empty-title">No business hours yet</p>
+                <p class="bh-empty-sub">Create your first group to set when your team is available.</p>
+              </div>
 
               <div class="tz-section">
                 <h3 class="tz-heading">Timezone</h3>
@@ -1611,113 +1762,6 @@
               </div>
             </div>
 
-            <!-- BH ACCORDION TEMPLATE -->
-            <template id="bh-accordion-template">
-              <details class="bh-accordion" open>
-                <summary class="bh-acc-head">
-                  <svg class="bh-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polyline points="9 6 15 12 9 18"/>
-                  </svg>
-                  <div class="bh-acc-title">
-                    <span class="bh-acc-sources">All sources</span>
-                    <span class="bh-acc-sep">·</span>
-                    <span class="bh-acc-inboxes">All inboxes</span>
-                  </div>
-                  <button type="button" class="bh-acc-delete" title="Delete group" aria-label="Delete business hours group">
-                    <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>
-                  </button>
-                </summary>
-                <div class="bh-acc-body">
-
-                  <div class="form-group">
-                    <label class="form-label">Inboxes <span class="req">*</span></label>
-                    <select class="form-control bh-inbox-mode">
-                      <option value="all" selected>All inboxes</option>
-                      <option value="select">Select inboxes</option>
-                    </select>
-                    <div class="inbox-checkbox-grid bh-inbox-grid">
-                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="J&amp;G Shoes" checked><span class="lbl">J&amp;G Shoes</span></label>
-                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="J&amp;G Support" checked><span class="lbl">J&amp;G Support</span></label>
-                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="J&amp;G Wholesale" checked><span class="lbl">J&amp;G Wholesale</span></label>
-                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="J&amp;G Wholesale Support" checked><span class="lbl">J&amp;G Wholesale Support</span></label>
-                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="Returns" checked><span class="lbl">Returns</span></label>
-                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="Sales (Internal)" checked><span class="lbl">Sales (Internal)</span></label>
-                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="Wholesale" checked><span class="lbl">Wholesale</span></label>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Sources <span class="req">*</span></label>
-                    <select class="form-control bh-source-mode">
-                      <option value="all" selected>All sources</option>
-                      <option value="select">Select sources</option>
-                    </select>
-                    <div class="inbox-checkbox-grid bh-source-grid">
-                      <label class="check-row"><input type="checkbox" class="bh-source" data-name="Ticket / Email" checked><span class="lbl">Ticket / Email</span></label>
-                      <label class="check-row"><input type="checkbox" class="bh-source" data-name="Live chat" checked><span class="lbl">Live chat</span></label>
-                      <label class="check-row"><input type="checkbox" class="bh-source" data-name="Facebook" checked><span class="lbl">Facebook</span></label>
-                      <label class="check-row"><input type="checkbox" class="bh-source" data-name="Instagram" checked><span class="lbl">Instagram</span></label>
-                      <label class="check-row"><input type="checkbox" class="bh-source" data-name="Other" checked><span class="lbl">Other</span></label>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Operational Hours <span class="req">*</span></label>
-                    <div class="op-hours-list">
-                      <label class="radio-row">
-                        <input type="radio" class="bh-op-radio" value="calendar">
-                        <span class="radio-label">Calendar Hours (24/7)</span>
-                      </label>
-                      <label class="radio-row">
-                        <input type="radio" class="bh-op-radio" value="business" checked>
-                        <span class="radio-label">Business Hours (Choose work days / hours)</span>
-                      </label>
-                    </div>
-
-                    <div class="business-card show bh-business-card">
-                      <div class="standard-toggle">
-                        <label class="radio-row" style="margin: 0;">
-                          <input type="radio" class="bh-schedule-radio" value="standard" checked>
-                          <span class="radio-label">Standard Hours</span>
-                        </label>
-                        <label class="radio-row" style="margin: 0;">
-                          <input type="radio" class="bh-schedule-radio" value="customize">
-                          <span class="radio-label">Custom Hours</span>
-                        </label>
-                      </div>
-
-                      <div class="bh-standard-layout">
-                        <div class="business-card-row">
-                          <div class="row-label">Select Days</div>
-                          <div class="day-toggles">
-                            <div class="day-toggle-item"><label class="switch" title="Enable Monday"><input type="checkbox" class="bh-day" data-day="Monday" checked><span class="slider"></span></label><span class="lbl">Monday</span></div>
-                            <div class="day-toggle-item"><label class="switch" title="Enable Tuesday"><input type="checkbox" class="bh-day" data-day="Tuesday" checked><span class="slider"></span></label><span class="lbl">Tuesday</span></div>
-                            <div class="day-toggle-item"><label class="switch" title="Enable Wednesday"><input type="checkbox" class="bh-day" data-day="Wednesday" checked><span class="slider"></span></label><span class="lbl">Wednesday</span></div>
-                            <div class="day-toggle-item"><label class="switch" title="Enable Thursday"><input type="checkbox" class="bh-day" data-day="Thursday" checked><span class="slider"></span></label><span class="lbl">Thursday</span></div>
-                            <div class="day-toggle-item"><label class="switch" title="Enable Friday"><input type="checkbox" class="bh-day" data-day="Friday" checked><span class="slider"></span></label><span class="lbl">Friday</span></div>
-                            <div class="day-toggle-item"><label class="switch" title="Enable Saturday"><input type="checkbox" class="bh-day" data-day="Saturday"><span class="slider"></span></label><span class="lbl">Saturday</span></div>
-                            <div class="day-toggle-item"><label class="switch" title="Enable Sunday"><input type="checkbox" class="bh-day" data-day="Sunday"><span class="slider"></span></label><span class="lbl">Sunday</span></div>
-                          </div>
-                        </div>
-
-                        <div class="business-card-row">
-                          <div class="row-label">Select Time</div>
-                          <div class="time-row">
-                            <select class="form-control time-select full-time bh-start-time" aria-label="Start time"></select>
-                            <span class="to-sep">-</span>
-                            <select class="form-control time-select full-time bh-end-time" aria-label="End time"></select>
-                            <span class="duration-label">8 h</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="bh-customize-layout" hidden></div>
-                    </div>
-                  </div>
-
-                </div>
-              </details>
-            </template>
 
             <!-- TAB: HOLIDAYS -->
             <div id="tab-holidays" class="tab-panel" role="tabpanel">
@@ -1884,6 +1928,123 @@
     </div>
   </div>
 
+  <!-- BH Editor Modal -->
+  <div class="modal-backdrop" id="bh-editor-modal" hidden aria-hidden="true">
+    <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="bh-editor-title">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="bh-editor-title">Add business hours</h3>
+          <p class="modal-subtitle">Define which inboxes, sources, and times this group covers.</p>
+        </div>
+        <button type="button" class="modal-close" id="bh-editor-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body modal-body-scroll">
+
+        <div class="form-group">
+          <label class="form-label" for="bh-in-name">Name <span class="req">*</span></label>
+          <input type="text" id="bh-in-name" class="form-control" placeholder="e.g. Sales team hours" maxlength="60">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="bh-in-desc">Description</label>
+          <textarea id="bh-in-desc" class="form-control" rows="2" placeholder="Optional — what this group covers."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Inboxes <span class="req">*</span></label>
+          <select id="bh-in-inbox-mode" class="form-control">
+            <option value="all" selected>All inboxes</option>
+            <option value="select">Select inboxes</option>
+          </select>
+          <div id="bh-in-inbox-grid" class="inbox-checkbox-grid">
+            <label class="check-row"><input type="checkbox" class="bh-in-inbox" data-name="J&amp;G Shoes" checked><span class="lbl">J&amp;G Shoes</span></label>
+            <label class="check-row"><input type="checkbox" class="bh-in-inbox" data-name="J&amp;G Support" checked><span class="lbl">J&amp;G Support</span></label>
+            <label class="check-row"><input type="checkbox" class="bh-in-inbox" data-name="J&amp;G Wholesale" checked><span class="lbl">J&amp;G Wholesale</span></label>
+            <label class="check-row"><input type="checkbox" class="bh-in-inbox" data-name="J&amp;G Wholesale Support" checked><span class="lbl">J&amp;G Wholesale Support</span></label>
+            <label class="check-row"><input type="checkbox" class="bh-in-inbox" data-name="Returns" checked><span class="lbl">Returns</span></label>
+            <label class="check-row"><input type="checkbox" class="bh-in-inbox" data-name="Sales (Internal)" checked><span class="lbl">Sales (Internal)</span></label>
+            <label class="check-row"><input type="checkbox" class="bh-in-inbox" data-name="Wholesale" checked><span class="lbl">Wholesale</span></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Sources <span class="req">*</span></label>
+          <select id="bh-in-source-mode" class="form-control">
+            <option value="all" selected>All sources</option>
+            <option value="select">Select sources</option>
+          </select>
+          <div id="bh-in-source-grid" class="inbox-checkbox-grid">
+            <label class="check-row"><input type="checkbox" class="bh-in-source" data-name="Ticket / Email" checked><span class="lbl">Ticket / Email</span></label>
+            <label class="check-row"><input type="checkbox" class="bh-in-source" data-name="Live chat" checked><span class="lbl">Live chat</span></label>
+            <label class="check-row"><input type="checkbox" class="bh-in-source" data-name="Facebook" checked><span class="lbl">Facebook</span></label>
+            <label class="check-row"><input type="checkbox" class="bh-in-source" data-name="Instagram" checked><span class="lbl">Instagram</span></label>
+            <label class="check-row"><input type="checkbox" class="bh-in-source" data-name="Other" checked><span class="lbl">Other</span></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Operational Hours <span class="req">*</span></label>
+          <div class="op-hours-list">
+            <label class="radio-row">
+              <input type="radio" name="bh-in-op" class="bh-in-op" value="calendar">
+              <span class="radio-label">Calendar Hours (24/7)</span>
+            </label>
+            <label class="radio-row">
+              <input type="radio" name="bh-in-op" class="bh-in-op" value="business" checked>
+              <span class="radio-label">Business Hours (Choose work days / hours)</span>
+            </label>
+          </div>
+
+          <div id="bh-in-business-card" class="business-card show">
+            <div class="standard-toggle">
+              <label class="radio-row" style="margin: 0;">
+                <input type="radio" name="bh-in-schedule" class="bh-in-schedule" value="standard" checked>
+                <span class="radio-label">Standard Hours</span>
+              </label>
+              <label class="radio-row" style="margin: 0;">
+                <input type="radio" name="bh-in-schedule" class="bh-in-schedule" value="customize">
+                <span class="radio-label">Custom Hours</span>
+              </label>
+            </div>
+
+            <div id="bh-in-standard">
+              <div class="business-card-row">
+                <div class="row-label">Select Days</div>
+                <div class="day-toggles" id="bh-in-std-days">
+                  <div class="day-toggle-item"><label class="switch" title="Enable Monday"><input type="checkbox" data-day="Monday" checked><span class="slider"></span></label><span class="lbl">Monday</span></div>
+                  <div class="day-toggle-item"><label class="switch" title="Enable Tuesday"><input type="checkbox" data-day="Tuesday" checked><span class="slider"></span></label><span class="lbl">Tuesday</span></div>
+                  <div class="day-toggle-item"><label class="switch" title="Enable Wednesday"><input type="checkbox" data-day="Wednesday" checked><span class="slider"></span></label><span class="lbl">Wednesday</span></div>
+                  <div class="day-toggle-item"><label class="switch" title="Enable Thursday"><input type="checkbox" data-day="Thursday" checked><span class="slider"></span></label><span class="lbl">Thursday</span></div>
+                  <div class="day-toggle-item"><label class="switch" title="Enable Friday"><input type="checkbox" data-day="Friday" checked><span class="slider"></span></label><span class="lbl">Friday</span></div>
+                  <div class="day-toggle-item"><label class="switch" title="Enable Saturday"><input type="checkbox" data-day="Saturday"><span class="slider"></span></label><span class="lbl">Saturday</span></div>
+                  <div class="day-toggle-item"><label class="switch" title="Enable Sunday"><input type="checkbox" data-day="Sunday"><span class="slider"></span></label><span class="lbl">Sunday</span></div>
+                </div>
+              </div>
+              <div class="business-card-row">
+                <div class="row-label">Select Time</div>
+                <div class="time-row">
+                  <select class="form-control time-select full-time" id="bh-in-std-start" aria-label="Start time"></select>
+                  <span class="to-sep">-</span>
+                  <select class="form-control time-select full-time" id="bh-in-std-end" aria-label="End time"></select>
+                  <span class="duration-label" id="bh-in-std-duration">8 h</span>
+                </div>
+              </div>
+            </div>
+
+            <div id="bh-in-customize" hidden></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="bh-editor-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="bh-editor-save">Save</button>
+      </div>
+    </div>
+  </div>
+
   <!-- BH Delete Confirm Modal -->
   <div class="modal-backdrop" id="bh-confirm-modal" hidden aria-hidden="true">
     <div class="modal modal-confirm" role="dialog" aria-modal="true" aria-labelledby="bh-confirm-title">
@@ -1980,171 +2141,300 @@
         { name: 'Sunday',    checked: false }
       ];
 
-      // ===== BH accordion management =====
-      const accordionsRoot = document.getElementById('bh-accordions');
-      const accTemplate = document.getElementById('bh-accordion-template');
+      // ===== BH groups (data-driven) =====
+      const INBOX_OPTIONS = ['J&G Shoes','J&G Support','J&G Wholesale','J&G Wholesale Support','Returns','Sales (Internal)','Wholesale'];
+      const SOURCE_OPTIONS = ['Ticket / Email','Live chat','Facebook','Instagram','Other'];
+
+      const bhListEl = document.getElementById('bh-list');
+      const bhEmptyEl = document.getElementById('bh-empty');
       const addGroupBtn = document.getElementById('bh-add-group');
-      let bhUid = 0;
-      let pendingDelete = null;
+      let gid = 0;
+      let groups = [];
+      let editingId = null;
+      let pendingDeleteId = null;
 
-      function joinList(names, fallback) {
-        if (!names.length) return fallback;
-        if (names.length <= 3) return names.join(', ');
-        return `${names.slice(0, 3).join(', ')} +${names.length - 3} more`;
+      function defaultGroup() {
+        return {
+          id: ++gid,
+          name: '',
+          description: '',
+          inboxMode: 'all',
+          inboxes: [...INBOX_OPTIONS],
+          sourceMode: 'all',
+          sources: [...SOURCE_OPTIONS],
+          opHours: 'business',
+          scheduleType: 'standard',
+          standardDays: { Monday: true, Tuesday: true, Wednesday: true, Thursday: true, Friday: true, Saturday: false, Sunday: false },
+          standardStart: '9:00am',
+          standardEnd: '5:00pm',
+          customRows: DAYS.map(d => ({ day: d.name, enabled: d.checked, start: '9:00am', end: '5:00pm' }))
+        };
       }
 
-      function refreshTitle(acc) {
-        const inboxMode = acc.querySelector('.bh-inbox-mode').value;
-        const inboxBoxes = acc.querySelectorAll('.bh-inbox');
-        const inboxChecked = [...inboxBoxes].filter(b => b.checked);
-        let inboxText;
-        if (inboxMode === 'all' || inboxChecked.length === inboxBoxes.length) {
-          inboxText = 'All inboxes';
-        } else if (inboxChecked.length === 0) {
-          inboxText = 'No inboxes';
-        } else {
-          inboxText = joinList(inboxChecked.map(b => b.dataset.name), 'No inboxes');
+      function renderGroupList() {
+        bhListEl.innerHTML = '';
+        if (!groups.length) {
+          bhEmptyEl.hidden = false;
+          bhListEl.hidden = true;
+          return;
         }
-
-        const sourceMode = acc.querySelector('.bh-source-mode').value;
-        const sourceBoxes = acc.querySelectorAll('.bh-source');
-        const sourceChecked = [...sourceBoxes].filter(b => b.checked);
-        let sourceText;
-        if (sourceMode === 'all' || sourceChecked.length === sourceBoxes.length) {
-          sourceText = 'All sources';
-        } else if (sourceChecked.length === 0) {
-          sourceText = 'No sources';
-        } else {
-          sourceText = joinList(sourceChecked.map(b => b.dataset.name), 'No sources');
-        }
-
-        acc.querySelector('.bh-acc-sources').textContent = sourceText;
-        acc.querySelector('.bh-acc-inboxes').textContent = inboxText;
-      }
-
-      function initAccordion(acc) {
-        const uid = ++bhUid;
-
-        // Unique radio group names so accordions are isolated
-        acc.querySelectorAll('.bh-op-radio').forEach(r => r.name = `op-hours-${uid}`);
-        acc.querySelectorAll('.bh-schedule-radio').forEach(r => r.name = `schedule-${uid}`);
-
-        const inboxModeSel = acc.querySelector('.bh-inbox-mode');
-        const inboxGrid    = acc.querySelector('.bh-inbox-grid');
-        const sourceModeSel = acc.querySelector('.bh-source-mode');
-        const sourceGrid    = acc.querySelector('.bh-source-grid');
-        const businessCard  = acc.querySelector('.bh-business-card');
-        const standardLayout = acc.querySelector('.bh-standard-layout');
-        const customizeLayout = acc.querySelector('.bh-customize-layout');
-
-        function applyMode(sel, grid) {
-          grid.classList.toggle('show', sel.value === 'select');
-        }
-        inboxModeSel.addEventListener('change', () => { applyMode(inboxModeSel, inboxGrid); refreshTitle(acc); });
-        sourceModeSel.addEventListener('change', () => { applyMode(sourceModeSel, sourceGrid); refreshTitle(acc); });
-        applyMode(inboxModeSel, inboxGrid);
-        applyMode(sourceModeSel, sourceGrid);
-
-        acc.querySelectorAll('.bh-inbox, .bh-source').forEach(cb =>
-          cb.addEventListener('change', () => refreshTitle(acc))
-        );
-
-        acc.querySelectorAll('.bh-op-radio').forEach(r =>
-          r.addEventListener('change', () => {
-            businessCard.classList.toggle('show', r.value === 'business' && r.checked);
-          })
-        );
-
-        // Standard time selects
-        const startTime = acc.querySelector('.bh-start-time');
-        const endTime   = acc.querySelector('.bh-end-time');
-        const durLabel  = standardLayout.querySelector('.duration-label');
-        populateTimeSelect(startTime, '9:00am');
-        populateTimeSelect(endTime, '5:00pm');
-        function recalcStd() {
-          durLabel.textContent = computeDurationStr(startTime.value, endTime.value);
-        }
-        [startTime, endTime].forEach(el => el.addEventListener('change', recalcStd));
-        recalcStd();
-
-        // Build customize day rows
-        DAYS.forEach(d => {
-          const row = document.createElement('div');
-          row.className = 'day-row' + (d.checked ? '' : ' disabled');
-          row.dataset.day = d.name;
-          row.innerHTML = `
-            <div class="check-row">
-              <label class="switch" title="Enable ${d.name}">
-                <input type="checkbox" class="day-toggle"${d.checked ? ' checked' : ''}>
-                <span class="slider"></span>
-              </label>
-              <span class="lbl">${d.name}</span>
+        bhEmptyEl.hidden = true;
+        bhListEl.hidden = false;
+        groups.forEach(g => {
+          const li = document.createElement('li');
+          li.className = 'bh-group-item';
+          li.dataset.id = g.id;
+          const descClass = g.description ? '' : ' is-empty';
+          const descText = g.description ? g.description : 'No description';
+          li.innerHTML = `
+            <div class="bh-group-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
-            <div class="time-row">
-              <select class="form-control time-select full-time start-time" aria-label="${d.name} start time">${buildOptions(TIME_OPTIONS, '9:00am')}</select>
-              <span class="to-sep">-</span>
-              <select class="form-control time-select full-time end-time" aria-label="${d.name} end time">${buildOptions(TIME_OPTIONS, '5:00pm')}</select>
-              <span class="duration-label">8 h</span>
+            <div class="bh-group-body">
+              <p class="bh-group-name">${escapeHtml(g.name || 'Untitled group')}</p>
+              <p class="bh-group-desc${descClass}">${escapeHtml(descText)}</p>
+            </div>
+            <div class="bh-group-actions">
+              <button type="button" class="bh-group-edit" title="Edit" aria-label="Edit group">
+                <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4z"/></svg>
+              </button>
+              <button type="button" class="bh-group-delete" title="Delete" aria-label="Delete group">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>
+              </button>
             </div>
           `;
-          customizeLayout.appendChild(row);
+          bhListEl.appendChild(li);
         });
-        customizeLayout.querySelectorAll('.day-row').forEach(row => {
-          row.querySelectorAll('.time-select').forEach(sel =>
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      }
+
+      bhListEl.addEventListener('click', (e) => {
+        const item = e.target.closest('.bh-group-item');
+        if (!item) return;
+        const id = parseInt(item.dataset.id, 10);
+        if (e.target.closest('.bh-group-edit')) openEditor(id);
+        else if (e.target.closest('.bh-group-delete')) openConfirmDelete(id);
+      });
+
+      // ===== BH editor modal =====
+      const bhEditor = document.getElementById('bh-editor-modal');
+      const bhEditorTitle = document.getElementById('bh-editor-title');
+      const bhEditorClose = document.getElementById('bh-editor-close');
+      const bhEditorCancel = document.getElementById('bh-editor-cancel');
+      const bhEditorSave = document.getElementById('bh-editor-save');
+
+      const inName = document.getElementById('bh-in-name');
+      const inDesc = document.getElementById('bh-in-desc');
+      const inInboxMode = document.getElementById('bh-in-inbox-mode');
+      const inInboxGrid = document.getElementById('bh-in-inbox-grid');
+      const inSourceMode = document.getElementById('bh-in-source-mode');
+      const inSourceGrid = document.getElementById('bh-in-source-grid');
+      const inBusinessCard = document.getElementById('bh-in-business-card');
+      const inStandard = document.getElementById('bh-in-standard');
+      const inCustomize = document.getElementById('bh-in-customize');
+      const inStdDaysWrap = document.getElementById('bh-in-std-days');
+      const inStdStart = document.getElementById('bh-in-std-start');
+      const inStdEnd = document.getElementById('bh-in-std-end');
+      const inStdDuration = document.getElementById('bh-in-std-duration');
+
+      populateTimeSelect(inStdStart, '9:00am');
+      populateTimeSelect(inStdEnd, '5:00pm');
+      function recalcInStd() {
+        inStdDuration.textContent = computeDurationStr(inStdStart.value, inStdEnd.value);
+      }
+      [inStdStart, inStdEnd].forEach(el => el.addEventListener('change', recalcInStd));
+
+      function buildCustomizeRows(rows) {
+        inCustomize.innerHTML = '';
+        rows.forEach(r => {
+          const row = document.createElement('div');
+          row.className = 'day-row' + (r.enabled ? '' : ' disabled');
+          row.dataset.day = r.day;
+          row.innerHTML = `
+            <div class="check-row">
+              <label class="switch" title="Enable ${r.day}">
+                <input type="checkbox" class="day-toggle"${r.enabled ? ' checked' : ''}>
+                <span class="slider"></span>
+              </label>
+              <span class="lbl">${r.day}</span>
+            </div>
+            <div class="time-row">
+              <select class="form-control time-select full-time start-time" aria-label="${r.day} start time">${buildOptions(TIME_OPTIONS, r.start)}</select>
+              <span class="to-sep">-</span>
+              <select class="form-control time-select full-time end-time" aria-label="${r.day} end time">${buildOptions(TIME_OPTIONS, r.end)}</select>
+              <span class="duration-label">${computeDurationStr(r.start, r.end)}</span>
+            </div>
+          `;
+          inCustomize.appendChild(row);
+          const startSel = row.querySelector('.start-time');
+          const endSel = row.querySelector('.end-time');
+          const durEl = row.querySelector('.duration-label');
+          [startSel, endSel].forEach(sel =>
             sel.addEventListener('change', () => {
-              const start = row.querySelector('.start-time').value;
-              const end   = row.querySelector('.end-time').value;
-              row.querySelector('.duration-label').textContent = computeDurationStr(start, end);
+              durEl.textContent = computeDurationStr(startSel.value, endSel.value);
             })
           );
           const toggle = row.querySelector('.day-toggle');
-          toggle.addEventListener('change', () => {
-            row.classList.toggle('disabled', !toggle.checked);
-          });
+          toggle.addEventListener('change', () => row.classList.toggle('disabled', !toggle.checked));
         });
-
-        // Schedule-type radio toggles standard / customize
-        acc.querySelectorAll('.bh-schedule-radio').forEach(r =>
-          r.addEventListener('change', () => {
-            if (!r.checked) return;
-            const isCustom = r.value === 'customize';
-            standardLayout.hidden = isCustom;
-            customizeLayout.hidden = !isCustom;
-          })
-        );
-
-        // Delete button
-        acc.querySelector('.bh-acc-delete').addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          openConfirmDelete(acc);
-        });
-
-        refreshTitle(acc);
       }
 
-      function spawnAccordion(open = true) {
-        const frag = accTemplate.content.cloneNode(true);
-        const acc = frag.querySelector('.bh-accordion');
-        acc.open = open;
-        accordionsRoot.appendChild(frag);
-        initAccordion(acc);
-        return acc;
+      function setMode(sel, grid, mode) {
+        sel.value = mode;
+        grid.classList.toggle('show', mode === 'select');
       }
 
-      // Confirm delete modal
+      function populateInboxGrid(checkedList) {
+        const set = new Set(checkedList);
+        inInboxGrid.querySelectorAll('.bh-in-inbox').forEach(cb => {
+          cb.checked = set.has(cb.dataset.name);
+        });
+      }
+      function populateSourceGrid(checkedList) {
+        const set = new Set(checkedList);
+        inSourceGrid.querySelectorAll('.bh-in-source').forEach(cb => {
+          cb.checked = set.has(cb.dataset.name);
+        });
+      }
+      function populateStdDays(daysMap) {
+        inStdDaysWrap.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.checked = !!daysMap[cb.dataset.day];
+        });
+      }
+
+      function loadGroupIntoForm(g) {
+        inName.value = g.name;
+        inDesc.value = g.description;
+        setMode(inInboxMode, inInboxGrid, g.inboxMode);
+        populateInboxGrid(g.inboxes);
+        setMode(inSourceMode, inSourceGrid, g.sourceMode);
+        populateSourceGrid(g.sources);
+
+        document.querySelectorAll('.bh-in-op').forEach(r => r.checked = (r.value === g.opHours));
+        inBusinessCard.classList.toggle('show', g.opHours === 'business');
+
+        document.querySelectorAll('.bh-in-schedule').forEach(r => r.checked = (r.value === g.scheduleType));
+        const isCustom = g.scheduleType === 'customize';
+        inStandard.hidden = isCustom;
+        inCustomize.hidden = !isCustom;
+
+        populateStdDays(g.standardDays);
+        inStdStart.value = g.standardStart;
+        inStdEnd.value = g.standardEnd;
+        recalcInStd();
+
+        buildCustomizeRows(g.customRows);
+      }
+
+      function readFormIntoGroup(g) {
+        g.name = inName.value.trim();
+        g.description = inDesc.value.trim();
+        g.inboxMode = inInboxMode.value;
+        g.inboxes = [...inInboxGrid.querySelectorAll('.bh-in-inbox:checked')].map(cb => cb.dataset.name);
+        g.sourceMode = inSourceMode.value;
+        g.sources = [...inSourceGrid.querySelectorAll('.bh-in-source:checked')].map(cb => cb.dataset.name);
+        const opR = document.querySelector('.bh-in-op:checked');
+        g.opHours = opR ? opR.value : 'business';
+        const schR = document.querySelector('.bh-in-schedule:checked');
+        g.scheduleType = schR ? schR.value : 'standard';
+        g.standardDays = {};
+        inStdDaysWrap.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          g.standardDays[cb.dataset.day] = cb.checked;
+        });
+        g.standardStart = inStdStart.value;
+        g.standardEnd = inStdEnd.value;
+        g.customRows = [...inCustomize.querySelectorAll('.day-row')].map(row => ({
+          day: row.dataset.day,
+          enabled: row.querySelector('.day-toggle').checked,
+          start: row.querySelector('.start-time').value,
+          end: row.querySelector('.end-time').value
+        }));
+      }
+
+      function openEditor(id) {
+        editingId = id;
+        let g;
+        if (id == null) {
+          g = defaultGroup();
+          bhEditorTitle.textContent = 'Add business hours';
+        } else {
+          g = groups.find(x => x.id === id);
+          if (!g) return;
+          bhEditorTitle.textContent = 'Edit business hours';
+        }
+        loadGroupIntoForm(g);
+        bhEditor.hidden = false;
+        bhEditor.setAttribute('aria-hidden', 'false');
+        setTimeout(() => inName.focus(), 50);
+      }
+      function closeEditor() {
+        editingId = null;
+        bhEditor.hidden = true;
+        bhEditor.setAttribute('aria-hidden', 'true');
+      }
+
+      // Editor field listeners
+      inInboxMode.addEventListener('change', () => inInboxGrid.classList.toggle('show', inInboxMode.value === 'select'));
+      inSourceMode.addEventListener('change', () => inSourceGrid.classList.toggle('show', inSourceMode.value === 'select'));
+      document.querySelectorAll('.bh-in-op').forEach(r =>
+        r.addEventListener('change', () => inBusinessCard.classList.toggle('show', r.value === 'business' && r.checked))
+      );
+      document.querySelectorAll('.bh-in-schedule').forEach(r =>
+        r.addEventListener('change', () => {
+          if (!r.checked) return;
+          const isCustom = r.value === 'customize';
+          inStandard.hidden = isCustom;
+          inCustomize.hidden = !isCustom;
+        })
+      );
+
+      bhEditorClose.addEventListener('click', closeEditor);
+      bhEditorCancel.addEventListener('click', closeEditor);
+      bhEditor.addEventListener('click', (e) => { if (e.target === bhEditor) closeEditor(); });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !bhEditor.hidden) closeEditor();
+      });
+
+      bhEditorSave.addEventListener('click', () => {
+        const name = inName.value.trim();
+        if (!name) {
+          inName.focus();
+          inName.classList.add('shake');
+          setTimeout(() => inName.classList.remove('shake'), 400);
+          return;
+        }
+        let g;
+        if (editingId == null) {
+          g = defaultGroup();
+          readFormIntoGroup(g);
+          groups.push(g);
+        } else {
+          g = groups.find(x => x.id === editingId);
+          if (!g) return closeEditor();
+          readFormIntoGroup(g);
+        }
+        renderGroupList();
+        closeEditor();
+      });
+
+      addGroupBtn.addEventListener('click', () => openEditor(null));
+
+      // Delete confirm
       const confirmModal = document.getElementById('bh-confirm-modal');
       const confirmClose = document.getElementById('bh-confirm-close');
       const confirmCancel = document.getElementById('bh-confirm-cancel');
       const confirmDelete = document.getElementById('bh-confirm-delete');
 
-      function openConfirmDelete(acc) {
-        pendingDelete = acc;
+      function openConfirmDelete(id) {
+        pendingDeleteId = id;
         confirmModal.hidden = false;
         confirmModal.setAttribute('aria-hidden', 'false');
       }
       function closeConfirm() {
-        pendingDelete = null;
+        pendingDeleteId = null;
         confirmModal.hidden = true;
         confirmModal.setAttribute('aria-hidden', 'true');
       }
@@ -2152,22 +2442,33 @@
       confirmCancel.addEventListener('click', closeConfirm);
       confirmModal.addEventListener('click', (e) => { if (e.target === confirmModal) closeConfirm(); });
       confirmDelete.addEventListener('click', () => {
-        if (pendingDelete) pendingDelete.remove();
+        if (pendingDeleteId != null) {
+          const item = bhListEl.querySelector(`.bh-group-item[data-id="${pendingDeleteId}"]`);
+          if (item) {
+            item.classList.add('removing');
+            setTimeout(() => {
+              groups = groups.filter(g => g.id !== pendingDeleteId);
+              renderGroupList();
+            }, 180);
+          } else {
+            groups = groups.filter(g => g.id !== pendingDeleteId);
+            renderGroupList();
+          }
+        }
         closeConfirm();
       });
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !confirmModal.hidden) closeConfirm();
       });
 
-      // Default accordion
-      spawnAccordion(true);
-
-      addGroupBtn.addEventListener('click', () => {
-        // Collapse other accordions so the new one is the focus
-        accordionsRoot.querySelectorAll('.bh-accordion[open]').forEach(a => a.open = false);
-        const acc = spawnAccordion(true);
-        acc.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      });
+      // Seed default group so user sees the pattern
+      (function seed() {
+        const g = defaultGroup();
+        g.name = 'Default business hours';
+        g.description = 'All sources and inboxes, Mon–Fri 9am–5pm.';
+        groups.push(g);
+        renderGroupList();
+      })();
 
       // Holiday list: modal + add card
       const modal = document.getElementById('hl-modal');
