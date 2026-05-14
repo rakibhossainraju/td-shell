@@ -934,6 +934,132 @@
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
+    /* =========================================================
+       HOLIDAY HEADER + MODAL
+    ========================================================= */
+    .holiday-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .holiday-header-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-ink);
+      margin: 0 0 4px;
+      letter-spacing: -0.1px;
+    }
+    .holiday-header-sub {
+      font-size: 13px;
+      color: var(--color-ink-muted);
+      margin: 0;
+    }
+    .holiday-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .holiday-add-btn svg { width: 16px; height: 16px; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+      animation: modalFade 0.15s ease-out;
+    }
+    .modal-backdrop[hidden] { display: none; }
+
+    .modal {
+      width: 100%;
+      max-width: 480px;
+      background: var(--color-surface-1);
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.25),
+                  0 8px 16px -8px rgba(15, 23, 42, 0.1);
+      overflow: hidden;
+      animation: modalIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 24px 16px;
+    }
+    .modal-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--color-ink);
+      margin: 0 0 4px;
+      letter-spacing: -0.2px;
+    }
+    .modal-subtitle {
+      font-size: 13px;
+      color: var(--color-ink-muted);
+      margin: 0;
+    }
+    .modal-close {
+      appearance: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      margin: -6px;
+      border-radius: var(--radius-sm);
+      color: var(--color-ink-subtle);
+      display: inline-flex;
+      transition: background 0.15s, color 0.15s;
+    }
+    .modal-close svg { width: 18px; height: 18px; }
+    .modal-close:hover { background: var(--color-surface-2); color: var(--color-ink); }
+
+    .modal-body {
+      padding: 8px 24px 20px;
+    }
+    .modal-body .form-group { margin-bottom: 18px; }
+    .modal-body .form-group:last-child { margin-bottom: 0; }
+
+    .modal-date-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .modal-date-row .form-group { margin-bottom: 0; }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 16px 24px 20px;
+      border-top: 1px solid var(--color-hairline);
+      background: var(--color-surface-2);
+    }
+
+    @keyframes modalFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(8px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 480px) {
+      .modal-date-row { grid-template-columns: 1fr; }
+    }
+
     /* Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -1179,23 +1305,21 @@
             <!-- TAB: HOLIDAYS -->
             <div id="tab-holidays" class="tab-panel" role="tabpanel">
 
-              <div class="form-group" style="max-width: 280px;">
-                <label class="form-label" for="hl-name">Holiday List Name <span class="req">*</span></label>
-                <input type="text" id="hl-name" class="form-control" value="Cherokee Green">
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Holidays added below will be treated as non-business hours. <span class="req">*</span></label>
-                <div class="holiday-inline-form">
-                  <input type="text" class="form-control" id="hl-input-name" placeholder="Enter holiday name" aria-label="Holiday name">
-                  <div class="date-input-wrap">
-                    <input type="text" class="form-control" id="hl-input-start" placeholder="Start Date" aria-label="Start date" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'">
-                  </div>
-                  <div class="date-input-wrap">
-                    <input type="text" class="form-control" id="hl-input-end" placeholder="End Date" aria-label="End date" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'">
-                  </div>
-                  <button class="btn btn-primary" id="hl-add-btn" type="button">Add</button>
+              <div class="holiday-header">
+                <div>
+                  <h3 class="holiday-header-title">Holidays</h3>
+                  <p class="holiday-header-sub">
+                    Schedule holidays for days that should be treated as non-business hours. <br/>
+                    These are dates when your business is closed and agents are not available to respond to support requests.
+                  </p>
                 </div>
+                <button type="button" class="btn btn-primary holiday-add-btn" id="hl-open-modal">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                  Add holiday
+                </button>
               </div>
 
               <div class="table-card">
@@ -1250,6 +1374,45 @@
 
     </main>
 
+  </div>
+
+  <!-- Holiday Modal -->
+  <div class="modal-backdrop" id="hl-modal" hidden aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="hl-modal-title">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="hl-modal-title">Add holiday</h3>
+          <p class="modal-subtitle">Mark a date or date range as non-business hours.</p>
+        </div>
+        <button type="button" class="modal-close" id="hl-modal-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="hl-input-name">Holiday name <span class="req">*</span></label>
+          <input type="text" id="hl-input-name" class="form-control" placeholder="e.g. New Year's Day">
+        </div>
+        <div class="modal-date-row">
+          <div class="form-group">
+            <label class="form-label" for="hl-input-start">Start date <span class="req">*</span></label>
+            <div class="date-input-wrap">
+              <input type="date" id="hl-input-start" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="hl-input-end">End date <span class="req">*</span></label>
+            <div class="date-input-wrap">
+              <input type="date" id="hl-input-end" class="form-control">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="hl-modal-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="hl-add-btn">Add holiday</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1416,7 +1579,11 @@
         });
       });
 
-      // Holiday list: add row
+      // Holiday list: modal + add row
+      const modal = document.getElementById('hl-modal');
+      const openBtn = document.getElementById('hl-open-modal');
+      const closeBtn = document.getElementById('hl-modal-close');
+      const cancelBtn = document.getElementById('hl-modal-cancel');
       const addBtn = document.getElementById('hl-add-btn');
       const tbody = document.getElementById('hl-table-body');
       const nameInput = document.getElementById('hl-input-name');
@@ -1434,6 +1601,29 @@
         const ms = new Date(b) - new Date(a);
         return Math.max(1, Math.round(ms / 86400000) + 1);
       }
+
+      function openModal() {
+        modal.hidden = false;
+        modal.setAttribute('aria-hidden', 'false');
+        setTimeout(() => nameInput.focus(), 50);
+      }
+      function closeModal() {
+        modal.hidden = true;
+        modal.setAttribute('aria-hidden', 'true');
+        nameInput.value = '';
+        startInput.value = '';
+        endInput.value = '';
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+      });
 
       addBtn.addEventListener('click', () => {
         const name = nameInput.value.trim();
@@ -1455,12 +1645,7 @@
           </td>
         `;
         tbody.appendChild(tr);
-
-        nameInput.value = '';
-        startInput.value = '';
-        endInput.value = '';
-        startInput.type = 'text';
-        endInput.type = 'text';
+        closeModal();
       });
 
       // Row delete handler (event delegation)
