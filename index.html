@@ -740,6 +740,49 @@
       background: var(--color-surface-1);
     }
 
+    .tz-section { margin-top: 20px; }
+    .tz-section .tz-heading {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-ink);
+      margin: 0 0 4px;
+    }
+    .tz-section .tz-subtext {
+      font-size: 13px;
+      color: var(--color-ink-muted);
+      margin: 0 0 10px;
+    }
+    .tz-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-1);
+    }
+    .tz-card .tz-card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--color-ink);
+      margin: 0 0 2px;
+    }
+    .tz-card .tz-card-desc {
+      font-size: 13px;
+      color: var(--color-ink-muted);
+      margin: 0;
+      line-height: 1.45;
+    }
+    .tz-card .btn-tz {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .tz-card .btn-tz svg { width: 16px; height: 16px; }
+
     .holiday-table {
       width: 100%;
       border-collapse: collapse;
@@ -968,16 +1011,6 @@
             <!-- TAB: BUSINESS HOURS -->
             <div id="tab-business" class="tab-panel active" role="tabpanel">
 
-              <div class="form-group">
-                <label class="form-label" for="bh-timezone">Time Zone <span class="req">*</span></label>
-                <select id="bh-timezone" class="form-control">
-                  <option value="" selected disabled>Select</option>
-                  <option>(GMT-08:00) Pacific Time (US &amp; Canada)</option>
-                  <option>(GMT+00:00) London</option>
-                  <option>(GMT+05:30) Mumbai, New Delhi</option>
-                </select>
-              </div>
-
                 <!-- INBOX PICKER -->
               <div class="form-group">
                 <label class="form-label" for="bh-inboxes">Inboxes <span class="req">*</span></label>
@@ -1072,6 +1105,24 @@
                   </div>
 
                   <div id="customize-layout" hidden></div>
+                </div>
+              </div>
+              <div class="tz-section">
+                <h3 class="tz-heading">Timezone</h3>
+                <p class="tz-subtext">Office-hours times are shown in your workspace timezone.</p>
+                <div class="tz-card">
+                  <div>
+                    <p class="tz-card-title">Workspace timezone</p>
+                    <p class="tz-card-desc">Times on this page are shown in America/Indiana/Marengo. Manage this in General settings.</p>
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-tz">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M2 12h20"/>
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    Manage in General
+                  </button>
                 </div>
               </div>
 
