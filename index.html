@@ -34,7 +34,7 @@
       /* Text */
       --color-ink:          #0e0f11;
       --color-ink-muted:    #3a3d44;
-      --color-ink-subtle:   #6b7280;
+      --color-ink-subtle: rgb(107 114 128 / 0.92);
       --color-ink-tertiary: #9ca3af;
       --color-required:     #dc2626;
 
@@ -1068,7 +1068,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
     .hl-name {
       font-size: 14px;
@@ -1082,13 +1082,17 @@
     }
     .hl-status {
       flex-shrink: 0;
-      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9.5px;
       font-weight: 600;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: var(--radius-pill);
-      line-height: 1.4;
+      line-height: 1;
+      height: 16px;
     }
     .hl-status-active {
       color: #047857;
@@ -1106,13 +1110,13 @@
     .hl-meta {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 12.5px;
-      color: var(--color-ink-muted);
+      gap: 7px;
+      font-size: 12px;
+      color: var(--color-ink-subtle);
     }
     .hl-meta-icon {
-      width: 13px;
-      height: 13px;
+      width: 12px;
+      height: 12px;
       flex-shrink: 0;
       color: var(--color-ink-subtle);
     }
