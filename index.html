@@ -683,6 +683,8 @@
 
     .time-select.ampm { width: 76px; }
 
+    .time-select.full-time { width: 96px; }
+
     .duration-label {
       font-size: 13px;
       color: var(--color-ink);
@@ -1287,8 +1289,37 @@
       recalcDuration();
 
       // ===== Customize mode: per-day rows =====
-      const HOURS = ['09','10','11','12','01','02','03','04','05','06','07','08'];
-      const MINUTES = ['00','15','30','45'];
+      const TIME_OPTIONS = (() => {
+        const out = [];
+        for (let h = 0; h < 24; h++) {
+          const ap = h < 12 ? 'am' : 'pm';
+          const h12 = ((h + 11) % 12) + 1;
+          for (const m of [0, 15, 30, 45]) {
+            out.push(`${h12}:${String(m).padStart(2, '0')}${ap}`);
+          }
+        }
+        return out;
+      })();
+
+      function parseTimeStr(str) {
+        const m = str.match(/^(\d{1,2}):(\d{2})(am|pm)$/i);
+        if (!m) return 0;
+        let h = parseInt(m[1], 10);
+        const mins = parseInt(m[2], 10);
+        const ap = m[3].toLowerCase();
+        if (ap === 'am') h = h === 12 ? 0 : h;
+        else h = h === 12 ? 12 : h + 12;
+        return h * 60 + mins;
+      }
+
+      function computeDurationStr(start, end) {
+        let diff = parseTimeStr(end) - parseTimeStr(start);
+        if (diff < 0) diff += 24 * 60;
+        const hrs = Math.floor(diff / 60);
+        const mins = diff % 60;
+        return mins ? `${hrs} h ${mins} m` : `${hrs} h`;
+      }
+
       const DAYS = [
         { name: 'Monday',    checked: true  },
         { name: 'Tuesday',   checked: true  },
@@ -1319,29 +1350,19 @@
             <span class="lbl">${d.name}</span>
           </div>
           <div class="time-row">
-            <select class="form-control time-select start-h" aria-label="${d.name} start hour">${buildOptions(HOURS, '09')}</select>
-            <span class="time-sep">:</span>
-            <select class="form-control time-select start-m" aria-label="${d.name} start minute">${buildOptions(MINUTES, '00')}</select>
-            <select class="form-control time-select ampm start-ap" aria-label="${d.name} start AM/PM">${buildOptions(['AM','PM'], 'AM')}</select>
-            <span class="to-sep">To</span>
-            <select class="form-control time-select end-h" aria-label="${d.name} end hour">${buildOptions(HOURS, '06')}</select>
-            <span class="time-sep">:</span>
-            <select class="form-control time-select end-m" aria-label="${d.name} end minute">${buildOptions(MINUTES, '00')}</select>
-            <select class="form-control time-select ampm end-ap" aria-label="${d.name} end AM/PM">${buildOptions(['AM','PM'], 'PM')}</select>
-            <span class="duration-label">9 h</span>
+            <select class="form-control time-select full-time start-time" aria-label="${d.name} start time">${buildOptions(TIME_OPTIONS, '9:00am')}</select>
+            <span class="to-sep">-</span>
+            <select class="form-control time-select full-time end-time" aria-label="${d.name} end time">${buildOptions(TIME_OPTIONS, '5:00pm')}</select>
+            <span class="duration-label">8 h</span>
           </div>
         `;
         customizeLayout.appendChild(row);
       });
 
       function recalcRow(row) {
-        const sH  = row.querySelector('.start-h').value;
-        const sM  = row.querySelector('.start-m').value;
-        const sAp = row.querySelector('.start-ap').value;
-        const eH  = row.querySelector('.end-h').value;
-        const eM  = row.querySelector('.end-m').value;
-        const eAp = row.querySelector('.end-ap').value;
-        row.querySelector('.duration-label').textContent = computeDuration(sH, sM, sAp, eH, eM, eAp);
+        const start = row.querySelector('.start-time').value;
+        const end   = row.querySelector('.end-time').value;
+        row.querySelector('.duration-label').textContent = computeDurationStr(start, end);
       }
 
       customizeLayout.querySelectorAll('.day-row').forEach(row => {
