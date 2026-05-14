@@ -649,10 +649,21 @@
       margin-bottom: 12px;
     }
 
-    .day-checkboxes {
+    .day-toggles {
       display: flex;
-      gap: 22px;
+      gap: 22px 28px;
       flex-wrap: wrap;
+    }
+
+    .day-toggle-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .day-toggle-item .lbl {
+      font-size: 13.5px;
+      color: var(--color-ink);
     }
 
     .time-row {
@@ -1066,14 +1077,14 @@
                   <div id="standard-layout">
                   <div class="business-card-row">
                     <div class="row-label">Select Days</div>
-                    <div class="day-checkboxes" id="day-checkboxes">
-                      <label class="check-row"><input type="checkbox" data-day="Monday" checked><span class="lbl">Monday</span></label>
-                      <label class="check-row"><input type="checkbox" data-day="Tuesday" checked><span class="lbl">Tuesday</span></label>
-                      <label class="check-row"><input type="checkbox" data-day="Wednesday" checked><span class="lbl">Wednesday</span></label>
-                      <label class="check-row"><input type="checkbox" data-day="Thursday" checked><span class="lbl">Thursday</span></label>
-                      <label class="check-row"><input type="checkbox" data-day="Friday" checked><span class="lbl">Friday</span></label>
-                      <label class="check-row"><input type="checkbox" data-day="Saturday"><span class="lbl">Saturday</span></label>
-                      <label class="check-row"><input type="checkbox" data-day="Sunday"><span class="lbl">Sunday</span></label>
+                    <div class="day-toggles" id="day-checkboxes">
+                      <div class="day-toggle-item"><label class="switch" title="Enable Monday"><input type="checkbox" data-day="Monday" checked><span class="slider"></span></label><span class="lbl">Monday</span></div>
+                      <div class="day-toggle-item"><label class="switch" title="Enable Tuesday"><input type="checkbox" data-day="Tuesday" checked><span class="slider"></span></label><span class="lbl">Tuesday</span></div>
+                      <div class="day-toggle-item"><label class="switch" title="Enable Wednesday"><input type="checkbox" data-day="Wednesday" checked><span class="slider"></span></label><span class="lbl">Wednesday</span></div>
+                      <div class="day-toggle-item"><label class="switch" title="Enable Thursday"><input type="checkbox" data-day="Thursday" checked><span class="slider"></span></label><span class="lbl">Thursday</span></div>
+                      <div class="day-toggle-item"><label class="switch" title="Enable Friday"><input type="checkbox" data-day="Friday" checked><span class="slider"></span></label><span class="lbl">Friday</span></div>
+                      <div class="day-toggle-item"><label class="switch" title="Enable Saturday"><input type="checkbox" data-day="Saturday"><span class="slider"></span></label><span class="lbl">Saturday</span></div>
+                      <div class="day-toggle-item"><label class="switch" title="Enable Sunday"><input type="checkbox" data-day="Sunday"><span class="slider"></span></label><span class="lbl">Sunday</span></div>
                     </div>
                   </div>
 
