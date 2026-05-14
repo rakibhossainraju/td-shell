@@ -148,6 +148,12 @@
     }
     .btn-secondary:hover { background: var(--color-surface-2); }
 
+    .btn-danger {
+      background: #dc2626;
+      color: #fff;
+    }
+    .btn-danger:hover { background: #b91c1c; }
+
     .btn-link {
       background: transparent;
       color: var(--color-primary);
@@ -964,6 +970,143 @@
     }
     .holiday-add-btn svg { width: 16px; height: 16px; }
 
+    /* =========================================================
+       BUSINESS HOURS — accordion list
+    ========================================================= */
+    .bh-list-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .bh-list-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-ink);
+      margin: 0 0 4px;
+      letter-spacing: -0.1px;
+    }
+    .bh-list-sub {
+      font-size: 13px;
+      color: var(--color-ink-muted);
+      margin: 0;
+    }
+    .bh-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .bh-add-btn svg { width: 16px; height: 16px; }
+
+    .bh-accordions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .bh-accordion {
+      background: var(--color-surface-1);
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: border-color 0.18s, box-shadow 0.18s;
+    }
+    .bh-accordion[open] {
+      border-color: var(--color-hairline-strong);
+      box-shadow: 0 2px 10px -4px rgba(15, 23, 42, 0.08);
+    }
+    .bh-accordion:not([open]):hover {
+      border-color: var(--color-hairline-strong);
+    }
+
+    .bh-acc-head {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 14px 14px 16px;
+      user-select: none;
+    }
+    .bh-acc-head::-webkit-details-marker { display: none; }
+
+    .bh-chevron {
+      width: 16px; height: 16px;
+      flex-shrink: 0;
+      color: var(--color-ink-subtle);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bh-accordion[open] .bh-chevron {
+      transform: rotate(90deg);
+      color: var(--color-primary);
+    }
+
+    .bh-acc-title {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 13.5px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .bh-acc-sources {
+      font-weight: 600;
+      color: var(--color-ink);
+      flex-shrink: 0;
+      max-width: 40%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bh-acc-sep {
+      color: var(--color-ink-tertiary);
+      flex-shrink: 0;
+    }
+    .bh-acc-inboxes {
+      color: var(--color-ink-muted);
+      font-weight: 400;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .bh-acc-delete {
+      appearance: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      color: var(--color-ink-subtle);
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.15s, background 0.15s, color 0.15s;
+    }
+    .bh-accordion:hover .bh-acc-delete,
+    .bh-accordion[open] .bh-acc-delete,
+    .bh-acc-delete:focus-visible { opacity: 1; }
+    .bh-acc-delete:hover { color: #dc2626; background: #fee2e2; }
+    .bh-acc-delete svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .bh-acc-body {
+      padding: 18px 22px 20px;
+      border-top: 1px solid var(--color-hairline);
+      background: var(--color-canvas);
+    }
+    .bh-acc-body .form-group { margin-bottom: 22px; }
+    .bh-acc-body .form-group:last-child { margin-bottom: 0; }
+    .bh-acc-body .business-card { margin-left: 0; }
+
+    .bh-acc-body .inbox-checkbox-grid { background: var(--color-surface-1); }
+
     /* Holiday list */
     .holiday-list {
       list-style: none;
@@ -1432,79 +1575,22 @@
             <!-- TAB: BUSINESS HOURS -->
             <div id="tab-business" class="tab-panel active" role="tabpanel">
 
-                <!-- INBOX PICKER -->
-              <div class="form-group">
-                <label class="form-label" for="bh-inboxes">Inboxes <span class="req">*</span></label>
-                <select id="bh-inboxes" class="form-control">
-                  <option value="all" selected>All inboxes</option>
-                  <option value="select">Select inboxes</option>
-                </select>
-                <div id="bh-inbox-grid" class="inbox-checkbox-grid">
-                  <label class="check-row"><input type="checkbox" data-inbox="J&G Shoes"><span class="lbl">J&amp;G Shoes</span></label>
-                  <label class="check-row"><input type="checkbox" data-inbox="J&G Support" checked><span class="lbl">J&amp;G Support</span></label>
-                  <label class="check-row"><input type="checkbox" data-inbox="J&G Wholesale"><span class="lbl">J&amp;G Wholesale</span></label>
-                  <label class="check-row"><input type="checkbox" data-inbox="J&G Wholesale Support"><span class="lbl">J&amp;G Wholesale Support</span></label>
-                  <label class="check-row"><input type="checkbox" data-inbox="Returns" checked><span class="lbl">Returns</span></label>
-                  <label class="check-row"><input type="checkbox" data-inbox="Sales (Internal)" checked><span class="lbl">Sales (Internal)</span></label>
-                  <label class="check-row"><input type="checkbox" data-inbox="Wholesale"><span class="lbl">Wholesale</span></label>
+              <div class="bh-list-header">
+                <div>
+                  <h3 class="bh-list-title">Business hours</h3>
+                  <p class="bh-list-sub">Create groups for different inboxes and sources. Each group has its own schedule.</p>
                 </div>
+                <button type="button" class="btn btn-primary bh-add-btn" id="bh-add-group">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                  Add business hours
+                </button>
               </div>
 
-              <div class="form-group">
-                <label class="form-label">Operational Hours <span class="req">*</span></label>
-                <div class="op-hours-list">
-                  <label class="radio-row">
-                    <input type="radio" name="op-hours" value="calendar">
-                    <span class="radio-label">Calendar Hours (24/7)</span>
-                  </label>
-                  <label class="radio-row">
-                    <input type="radio" name="op-hours" value="business" checked>
-                    <span class="radio-label">
-                      Business Hours (Choose work days / hours)
-                    </span>
-                  </label>
-                </div>
+              <div class="bh-accordions" id="bh-accordions"></div>
 
-                <div id="business-card" class="business-card show">
-                  <div class="standard-toggle">
-                    <label class="radio-row" style="margin: 0;">
-                      <input type="radio" name="schedule-type" value="standard" checked>
-                      <span class="radio-label">Standard Hours</span>
-                    </label>
-                    <label class="radio-row" style="margin: 0;">
-                      <input type="radio" name="schedule-type" value="customize">
-                      <span class="radio-label">Custom Hours</span>
-                    </label>
-                  </div>
-
-                  <div id="standard-layout">
-                  <div class="business-card-row">
-                    <div class="row-label">Select Days</div>
-                    <div class="day-toggles" id="day-checkboxes">
-                      <div class="day-toggle-item"><label class="switch" title="Enable Monday"><input type="checkbox" data-day="Monday" checked><span class="slider"></span></label><span class="lbl">Monday</span></div>
-                      <div class="day-toggle-item"><label class="switch" title="Enable Tuesday"><input type="checkbox" data-day="Tuesday" checked><span class="slider"></span></label><span class="lbl">Tuesday</span></div>
-                      <div class="day-toggle-item"><label class="switch" title="Enable Wednesday"><input type="checkbox" data-day="Wednesday" checked><span class="slider"></span></label><span class="lbl">Wednesday</span></div>
-                      <div class="day-toggle-item"><label class="switch" title="Enable Thursday"><input type="checkbox" data-day="Thursday" checked><span class="slider"></span></label><span class="lbl">Thursday</span></div>
-                      <div class="day-toggle-item"><label class="switch" title="Enable Friday"><input type="checkbox" data-day="Friday" checked><span class="slider"></span></label><span class="lbl">Friday</span></div>
-                      <div class="day-toggle-item"><label class="switch" title="Enable Saturday"><input type="checkbox" data-day="Saturday"><span class="slider"></span></label><span class="lbl">Saturday</span></div>
-                      <div class="day-toggle-item"><label class="switch" title="Enable Sunday"><input type="checkbox" data-day="Sunday"><span class="slider"></span></label><span class="lbl">Sunday</span></div>
-                    </div>
-                  </div>
-
-                  <div class="business-card-row">
-                    <div class="row-label">Select Time</div>
-                    <div class="time-row">
-                      <select class="form-control time-select full-time" id="start-time" aria-label="Start time"></select>
-                      <span class="to-sep">-</span>
-                      <select class="form-control time-select full-time" id="end-time" aria-label="End time"></select>
-                      <span class="duration-label" id="duration-label">8 h</span>
-                    </div>
-                  </div>
-                  </div>
-
-                  <div id="customize-layout" hidden></div>
-                </div>
-              </div>
               <div class="tz-section">
                 <h3 class="tz-heading">Timezone</h3>
                 <p class="tz-subtext">Business-hours times are shown in your workspace timezone.</p>
@@ -1523,12 +1609,115 @@
                   </button>
                 </div>
               </div>
-
-              <div class="action-bar">
-                <button class="btn btn-primary">Save</button>
-                <button class="btn btn-secondary">Cancel</button>
-              </div>
             </div>
+
+            <!-- BH ACCORDION TEMPLATE -->
+            <template id="bh-accordion-template">
+              <details class="bh-accordion" open>
+                <summary class="bh-acc-head">
+                  <svg class="bh-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="9 6 15 12 9 18"/>
+                  </svg>
+                  <div class="bh-acc-title">
+                    <span class="bh-acc-sources">All sources</span>
+                    <span class="bh-acc-sep">·</span>
+                    <span class="bh-acc-inboxes">All inboxes</span>
+                  </div>
+                  <button type="button" class="bh-acc-delete" title="Delete group" aria-label="Delete business hours group">
+                    <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>
+                  </button>
+                </summary>
+                <div class="bh-acc-body">
+
+                  <div class="form-group">
+                    <label class="form-label">Inboxes <span class="req">*</span></label>
+                    <select class="form-control bh-inbox-mode">
+                      <option value="all" selected>All inboxes</option>
+                      <option value="select">Select inboxes</option>
+                    </select>
+                    <div class="inbox-checkbox-grid bh-inbox-grid">
+                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="J&amp;G Shoes" checked><span class="lbl">J&amp;G Shoes</span></label>
+                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="J&amp;G Support" checked><span class="lbl">J&amp;G Support</span></label>
+                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="J&amp;G Wholesale" checked><span class="lbl">J&amp;G Wholesale</span></label>
+                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="J&amp;G Wholesale Support" checked><span class="lbl">J&amp;G Wholesale Support</span></label>
+                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="Returns" checked><span class="lbl">Returns</span></label>
+                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="Sales (Internal)" checked><span class="lbl">Sales (Internal)</span></label>
+                      <label class="check-row"><input type="checkbox" class="bh-inbox" data-name="Wholesale" checked><span class="lbl">Wholesale</span></label>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Sources <span class="req">*</span></label>
+                    <select class="form-control bh-source-mode">
+                      <option value="all" selected>All sources</option>
+                      <option value="select">Select sources</option>
+                    </select>
+                    <div class="inbox-checkbox-grid bh-source-grid">
+                      <label class="check-row"><input type="checkbox" class="bh-source" data-name="Ticket / Email" checked><span class="lbl">Ticket / Email</span></label>
+                      <label class="check-row"><input type="checkbox" class="bh-source" data-name="Live chat" checked><span class="lbl">Live chat</span></label>
+                      <label class="check-row"><input type="checkbox" class="bh-source" data-name="Facebook" checked><span class="lbl">Facebook</span></label>
+                      <label class="check-row"><input type="checkbox" class="bh-source" data-name="Instagram" checked><span class="lbl">Instagram</span></label>
+                      <label class="check-row"><input type="checkbox" class="bh-source" data-name="Other" checked><span class="lbl">Other</span></label>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Operational Hours <span class="req">*</span></label>
+                    <div class="op-hours-list">
+                      <label class="radio-row">
+                        <input type="radio" class="bh-op-radio" value="calendar">
+                        <span class="radio-label">Calendar Hours (24/7)</span>
+                      </label>
+                      <label class="radio-row">
+                        <input type="radio" class="bh-op-radio" value="business" checked>
+                        <span class="radio-label">Business Hours (Choose work days / hours)</span>
+                      </label>
+                    </div>
+
+                    <div class="business-card show bh-business-card">
+                      <div class="standard-toggle">
+                        <label class="radio-row" style="margin: 0;">
+                          <input type="radio" class="bh-schedule-radio" value="standard" checked>
+                          <span class="radio-label">Standard Hours</span>
+                        </label>
+                        <label class="radio-row" style="margin: 0;">
+                          <input type="radio" class="bh-schedule-radio" value="customize">
+                          <span class="radio-label">Custom Hours</span>
+                        </label>
+                      </div>
+
+                      <div class="bh-standard-layout">
+                        <div class="business-card-row">
+                          <div class="row-label">Select Days</div>
+                          <div class="day-toggles">
+                            <div class="day-toggle-item"><label class="switch" title="Enable Monday"><input type="checkbox" class="bh-day" data-day="Monday" checked><span class="slider"></span></label><span class="lbl">Monday</span></div>
+                            <div class="day-toggle-item"><label class="switch" title="Enable Tuesday"><input type="checkbox" class="bh-day" data-day="Tuesday" checked><span class="slider"></span></label><span class="lbl">Tuesday</span></div>
+                            <div class="day-toggle-item"><label class="switch" title="Enable Wednesday"><input type="checkbox" class="bh-day" data-day="Wednesday" checked><span class="slider"></span></label><span class="lbl">Wednesday</span></div>
+                            <div class="day-toggle-item"><label class="switch" title="Enable Thursday"><input type="checkbox" class="bh-day" data-day="Thursday" checked><span class="slider"></span></label><span class="lbl">Thursday</span></div>
+                            <div class="day-toggle-item"><label class="switch" title="Enable Friday"><input type="checkbox" class="bh-day" data-day="Friday" checked><span class="slider"></span></label><span class="lbl">Friday</span></div>
+                            <div class="day-toggle-item"><label class="switch" title="Enable Saturday"><input type="checkbox" class="bh-day" data-day="Saturday"><span class="slider"></span></label><span class="lbl">Saturday</span></div>
+                            <div class="day-toggle-item"><label class="switch" title="Enable Sunday"><input type="checkbox" class="bh-day" data-day="Sunday"><span class="slider"></span></label><span class="lbl">Sunday</span></div>
+                          </div>
+                        </div>
+
+                        <div class="business-card-row">
+                          <div class="row-label">Select Time</div>
+                          <div class="time-row">
+                            <select class="form-control time-select full-time bh-start-time" aria-label="Start time"></select>
+                            <span class="to-sep">-</span>
+                            <select class="form-control time-select full-time bh-end-time" aria-label="End time"></select>
+                            <span class="duration-label">8 h</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="bh-customize-layout" hidden></div>
+                    </div>
+                  </div>
+
+                </div>
+              </details>
+            </template>
 
             <!-- TAB: HOLIDAYS -->
             <div id="tab-holidays" class="tab-panel" role="tabpanel">
@@ -1695,6 +1884,25 @@
     </div>
   </div>
 
+  <!-- BH Delete Confirm Modal -->
+  <div class="modal-backdrop" id="bh-confirm-modal" hidden aria-hidden="true">
+    <div class="modal modal-confirm" role="dialog" aria-modal="true" aria-labelledby="bh-confirm-title">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="bh-confirm-title">Delete this business hours group?</h3>
+          <p class="modal-subtitle" id="bh-confirm-sub">Group settings will be removed permanently.</p>
+        </div>
+        <button type="button" class="modal-close" id="bh-confirm-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="bh-confirm-cancel">Cancel</button>
+        <button type="button" class="btn btn-danger" id="bh-confirm-delete">Delete group</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -1715,33 +1923,15 @@
       // Enable/disable Business Hours
       const bhEnable = document.getElementById('bh-enable');
       const bhFormStack = document.querySelector('#business-hour .form-stack');
-      const bhActionBar = document.querySelector('#business-hour .action-bar');
 
       function applyBhEnabled() {
         const on = bhEnable.checked;
         bhFormStack.classList.toggle('disabled', !on);
-        bhActionBar.classList.toggle('disabled', !on);
       }
       bhEnable.addEventListener('change', applyBhEnabled);
       applyBhEnabled();
 
-      // Inbox selector: toggle checkbox grid
-      const inboxSelect = document.getElementById('bh-inboxes');
-      const inboxGrid = document.getElementById('bh-inbox-grid');
-      function applyInboxMode() {
-        inboxGrid.classList.toggle('show', inboxSelect.value === 'select');
-      }
-      inboxSelect.addEventListener('change', applyInboxMode);
-      applyInboxMode();
-
-      // Operational hours: show/hide business card
-      const opRadios = document.querySelectorAll('input[name="op-hours"]');
-      const businessCard = document.getElementById('business-card');
-      opRadios.forEach(r => r.addEventListener('change', () => {
-        businessCard.classList.toggle('show', r.value === 'business' && r.checked);
-      }));
-
-      // Time options shared by standard + customize
+      // Shared time helpers
       const TIME_OPTIONS = (() => {
         const out = [];
         for (let h = 0; h < 24; h++) {
@@ -1764,7 +1954,6 @@
         else h = h === 12 ? 12 : h + 12;
         return h * 60 + mins;
       }
-
       function computeDurationStr(start, end) {
         let diff = parseTimeStr(end) - parseTimeStr(start);
         if (diff < 0) diff += 24 * 60;
@@ -1772,27 +1961,14 @@
         const mins = diff % 60;
         return mins ? `${hrs} h ${mins} m` : `${hrs} h`;
       }
-
-      // Standard duration calculator
-      const startTime = document.getElementById('start-time');
-      const endTime = document.getElementById('end-time');
-      const durLabel = document.getElementById('duration-label');
-
       function populateTimeSelect(sel, selected) {
         sel.innerHTML = TIME_OPTIONS
           .map(v => `<option${v === selected ? ' selected' : ''}>${v}</option>`)
           .join('');
       }
-      populateTimeSelect(startTime, '9:00am');
-      populateTimeSelect(endTime, '5:00pm');
-
-      function recalcDuration() {
-        durLabel.textContent = computeDurationStr(startTime.value, endTime.value);
+      function buildOptions(values, selected) {
+        return values.map(v => `<option${v === selected ? ' selected' : ''}>${v}</option>`).join('');
       }
-      [startTime, endTime].forEach(el => el.addEventListener('change', recalcDuration));
-      recalcDuration();
-
-      // ===== Customize mode: per-day rows =====
 
       const DAYS = [
         { name: 'Monday',    checked: true  },
@@ -1804,59 +1980,193 @@
         { name: 'Sunday',    checked: false }
       ];
 
-      const customizeLayout = document.getElementById('customize-layout');
-      const standardLayout = document.getElementById('standard-layout');
+      // ===== BH accordion management =====
+      const accordionsRoot = document.getElementById('bh-accordions');
+      const accTemplate = document.getElementById('bh-accordion-template');
+      const addGroupBtn = document.getElementById('bh-add-group');
+      let bhUid = 0;
+      let pendingDelete = null;
 
-      function buildOptions(values, selected) {
-        return values.map(v => `<option${v === selected ? ' selected' : ''}>${v}</option>`).join('');
+      function joinList(names, fallback) {
+        if (!names.length) return fallback;
+        if (names.length <= 3) return names.join(', ');
+        return `${names.slice(0, 3).join(', ')} +${names.length - 3} more`;
       }
 
-      DAYS.forEach(d => {
-        const row = document.createElement('div');
-        row.className = 'day-row' + (d.checked ? '' : ' disabled');
-        row.dataset.day = d.name;
-        row.innerHTML = `
-          <div class="check-row">
-            <label class="switch" title="Enable ${d.name}">
-              <input type="checkbox" class="day-toggle"${d.checked ? ' checked' : ''}>
-              <span class="slider"></span>
-            </label>
-            <span class="lbl">${d.name}</span>
-          </div>
-          <div class="time-row">
-            <select class="form-control time-select full-time start-time" aria-label="${d.name} start time">${buildOptions(TIME_OPTIONS, '9:00am')}</select>
-            <span class="to-sep">-</span>
-            <select class="form-control time-select full-time end-time" aria-label="${d.name} end time">${buildOptions(TIME_OPTIONS, '5:00pm')}</select>
-            <span class="duration-label">8 h</span>
-          </div>
-        `;
-        customizeLayout.appendChild(row);
-      });
+      function refreshTitle(acc) {
+        const inboxMode = acc.querySelector('.bh-inbox-mode').value;
+        const inboxBoxes = acc.querySelectorAll('.bh-inbox');
+        const inboxChecked = [...inboxBoxes].filter(b => b.checked);
+        let inboxText;
+        if (inboxMode === 'all' || inboxChecked.length === inboxBoxes.length) {
+          inboxText = 'All inboxes';
+        } else if (inboxChecked.length === 0) {
+          inboxText = 'No inboxes';
+        } else {
+          inboxText = joinList(inboxChecked.map(b => b.dataset.name), 'No inboxes');
+        }
 
-      function recalcRow(row) {
-        const start = row.querySelector('.start-time').value;
-        const end   = row.querySelector('.end-time').value;
-        row.querySelector('.duration-label').textContent = computeDurationStr(start, end);
+        const sourceMode = acc.querySelector('.bh-source-mode').value;
+        const sourceBoxes = acc.querySelectorAll('.bh-source');
+        const sourceChecked = [...sourceBoxes].filter(b => b.checked);
+        let sourceText;
+        if (sourceMode === 'all' || sourceChecked.length === sourceBoxes.length) {
+          sourceText = 'All sources';
+        } else if (sourceChecked.length === 0) {
+          sourceText = 'No sources';
+        } else {
+          sourceText = joinList(sourceChecked.map(b => b.dataset.name), 'No sources');
+        }
+
+        acc.querySelector('.bh-acc-sources').textContent = sourceText;
+        acc.querySelector('.bh-acc-inboxes').textContent = inboxText;
       }
 
-      customizeLayout.querySelectorAll('.day-row').forEach(row => {
-        row.querySelectorAll('.time-select').forEach(sel =>
-          sel.addEventListener('change', () => recalcRow(row))
+      function initAccordion(acc) {
+        const uid = ++bhUid;
+
+        // Unique radio group names so accordions are isolated
+        acc.querySelectorAll('.bh-op-radio').forEach(r => r.name = `op-hours-${uid}`);
+        acc.querySelectorAll('.bh-schedule-radio').forEach(r => r.name = `schedule-${uid}`);
+
+        const inboxModeSel = acc.querySelector('.bh-inbox-mode');
+        const inboxGrid    = acc.querySelector('.bh-inbox-grid');
+        const sourceModeSel = acc.querySelector('.bh-source-mode');
+        const sourceGrid    = acc.querySelector('.bh-source-grid');
+        const businessCard  = acc.querySelector('.bh-business-card');
+        const standardLayout = acc.querySelector('.bh-standard-layout');
+        const customizeLayout = acc.querySelector('.bh-customize-layout');
+
+        function applyMode(sel, grid) {
+          grid.classList.toggle('show', sel.value === 'select');
+        }
+        inboxModeSel.addEventListener('change', () => { applyMode(inboxModeSel, inboxGrid); refreshTitle(acc); });
+        sourceModeSel.addEventListener('change', () => { applyMode(sourceModeSel, sourceGrid); refreshTitle(acc); });
+        applyMode(inboxModeSel, inboxGrid);
+        applyMode(sourceModeSel, sourceGrid);
+
+        acc.querySelectorAll('.bh-inbox, .bh-source').forEach(cb =>
+          cb.addEventListener('change', () => refreshTitle(acc))
         );
-        const toggle = row.querySelector('.day-toggle');
-        toggle.addEventListener('change', () => {
-          row.classList.toggle('disabled', !toggle.checked);
+
+        acc.querySelectorAll('.bh-op-radio').forEach(r =>
+          r.addEventListener('change', () => {
+            businessCard.classList.toggle('show', r.value === 'business' && r.checked);
+          })
+        );
+
+        // Standard time selects
+        const startTime = acc.querySelector('.bh-start-time');
+        const endTime   = acc.querySelector('.bh-end-time');
+        const durLabel  = standardLayout.querySelector('.duration-label');
+        populateTimeSelect(startTime, '9:00am');
+        populateTimeSelect(endTime, '5:00pm');
+        function recalcStd() {
+          durLabel.textContent = computeDurationStr(startTime.value, endTime.value);
+        }
+        [startTime, endTime].forEach(el => el.addEventListener('change', recalcStd));
+        recalcStd();
+
+        // Build customize day rows
+        DAYS.forEach(d => {
+          const row = document.createElement('div');
+          row.className = 'day-row' + (d.checked ? '' : ' disabled');
+          row.dataset.day = d.name;
+          row.innerHTML = `
+            <div class="check-row">
+              <label class="switch" title="Enable ${d.name}">
+                <input type="checkbox" class="day-toggle"${d.checked ? ' checked' : ''}>
+                <span class="slider"></span>
+              </label>
+              <span class="lbl">${d.name}</span>
+            </div>
+            <div class="time-row">
+              <select class="form-control time-select full-time start-time" aria-label="${d.name} start time">${buildOptions(TIME_OPTIONS, '9:00am')}</select>
+              <span class="to-sep">-</span>
+              <select class="form-control time-select full-time end-time" aria-label="${d.name} end time">${buildOptions(TIME_OPTIONS, '5:00pm')}</select>
+              <span class="duration-label">8 h</span>
+            </div>
+          `;
+          customizeLayout.appendChild(row);
         });
+        customizeLayout.querySelectorAll('.day-row').forEach(row => {
+          row.querySelectorAll('.time-select').forEach(sel =>
+            sel.addEventListener('change', () => {
+              const start = row.querySelector('.start-time').value;
+              const end   = row.querySelector('.end-time').value;
+              row.querySelector('.duration-label').textContent = computeDurationStr(start, end);
+            })
+          );
+          const toggle = row.querySelector('.day-toggle');
+          toggle.addEventListener('change', () => {
+            row.classList.toggle('disabled', !toggle.checked);
+          });
+        });
+
+        // Schedule-type radio toggles standard / customize
+        acc.querySelectorAll('.bh-schedule-radio').forEach(r =>
+          r.addEventListener('change', () => {
+            if (!r.checked) return;
+            const isCustom = r.value === 'customize';
+            standardLayout.hidden = isCustom;
+            customizeLayout.hidden = !isCustom;
+          })
+        );
+
+        // Delete button
+        acc.querySelector('.bh-acc-delete').addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openConfirmDelete(acc);
+        });
+
+        refreshTitle(acc);
+      }
+
+      function spawnAccordion(open = true) {
+        const frag = accTemplate.content.cloneNode(true);
+        const acc = frag.querySelector('.bh-accordion');
+        acc.open = open;
+        accordionsRoot.appendChild(frag);
+        initAccordion(acc);
+        return acc;
+      }
+
+      // Confirm delete modal
+      const confirmModal = document.getElementById('bh-confirm-modal');
+      const confirmClose = document.getElementById('bh-confirm-close');
+      const confirmCancel = document.getElementById('bh-confirm-cancel');
+      const confirmDelete = document.getElementById('bh-confirm-delete');
+
+      function openConfirmDelete(acc) {
+        pendingDelete = acc;
+        confirmModal.hidden = false;
+        confirmModal.setAttribute('aria-hidden', 'false');
+      }
+      function closeConfirm() {
+        pendingDelete = null;
+        confirmModal.hidden = true;
+        confirmModal.setAttribute('aria-hidden', 'true');
+      }
+      confirmClose.addEventListener('click', closeConfirm);
+      confirmCancel.addEventListener('click', closeConfirm);
+      confirmModal.addEventListener('click', (e) => { if (e.target === confirmModal) closeConfirm(); });
+      confirmDelete.addEventListener('click', () => {
+        if (pendingDelete) pendingDelete.remove();
+        closeConfirm();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !confirmModal.hidden) closeConfirm();
       });
 
-      // Schedule type toggle (Standard <-> Customize)
-      document.querySelectorAll('input[name="schedule-type"]').forEach(r => {
-        r.addEventListener('change', () => {
-          if (!r.checked) return;
-          const isCustom = r.value === 'customize';
-          standardLayout.hidden = isCustom;
-          customizeLayout.hidden = !isCustom;
-        });
+      // Default accordion
+      spawnAccordion(true);
+
+      addGroupBtn.addEventListener('click', () => {
+        // Collapse other accordions so the new one is the focus
+        accordionsRoot.querySelectorAll('.bh-accordion[open]').forEach(a => a.open = false);
+        const acc = spawnAccordion(true);
+        acc.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
 
       // Holiday list: modal + add card
